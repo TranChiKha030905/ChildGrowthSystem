@@ -1,4 +1,4 @@
-package Entity; // Chỉ ra là cái thư mục chứa cái users này
+package com.example.childgrowthsystem.entity; //nhin nhanh master, tutu import package sau//
 
 import jakarta.persistence.*; // nó tương được với 1 đám dòng  dưới : * = 1 đống
 // import jakarta.persistence.Entity;           // Dùng cho @Entity
