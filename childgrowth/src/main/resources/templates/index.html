@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Child Growth Tracking System</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Child Growth Tracking System</h1>
+<a href="/add">Add New Child</a>
+<h2>Dashboard</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Weight (kg)</th>
+        <th>Height (cm)</th>
+        <th>BMI</th>
+    </tr>
+    <tr th:each="child : ${children}">
+        <td th:text="${child.name}"></td>
+        <td th:text="${child.age}"></td>
+        <td th:text="${child.weight}"></td>
+        <td th:text="${child.height}"></td>
+        <td th:text="${child.bmi}"></td>
+    </tr>
+</table>
+</body>
+</html>
