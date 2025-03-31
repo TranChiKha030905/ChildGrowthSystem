@@ -1,0 +1,45 @@
+package com.example.childgrowthsystem.service;
+
+import com.example.childgrowthsystem.entity.ChildProfile;
+import com.example.childgrowthsystem.repository.ChildProfileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ChildProfileService {
+
+    @Autowired
+    private ChildProfileRepository repository;
+
+    public ChildProfile createChildProfile(ChildProfile childProfile) {
+        return repository.save(childProfile);
+    }
+
+    public List<ChildProfile> getAllChildProfiles() {
+        return repository.findAll();
+    }
+
+    public Optional<ChildProfile> getChildProfileById(Long id) {
+        return repository.findById(id);
+    }
+
+    public ChildProfile updateChildProfile(Long id, ChildProfile updatedProfile) {
+        Optional<ChildProfile> existingProfile = repository.findById(id);
+        if (existingProfile.isPresent()) {
+            ChildProfile profile = existingProfile.get();
+            profile.setName(updatedProfile.getName());
+            profile.setAge(updatedProfile.getAge());
+            profile.setHeight(updatedProfile.getHeight());
+            profile.setWeight(updatedProfile.getWeight());
+            return repository.save(profile);
+        }
+        return null;
+    }
+
+    public void deleteChildProfile(Long id) {
+        repository.deleteById(id);
+    }
+}
