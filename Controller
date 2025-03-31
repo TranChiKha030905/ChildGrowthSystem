@@ -1,0 +1,49 @@
+package com.example.childgrowthsystem.controller;
+
+import com.example.childgrowthsystem.entity.ChildProfile;
+import com.example.childgrowthsystem.service.ChildProfileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/child-profiles")
+public class ChildProfileController {
+
+    @Autowired
+    private ChildProfileService service;
+
+    @PostMapping
+    public ChildProfile createChildProfile(@RequestBody ChildProfile childProfile) {
+        return service.createChildProfile(childProfile);
+    }
+
+    @GetMapping
+    public List<ChildProfile> getAllChildProfiles() {
+        return service.getAllChildProfiles();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ChildProfile> getChildProfileById(@PathVariable Long id) {
+        Optional<ChildProfile> childProfile = service.getChildProfileById(id);
+        return childProfile.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ChildProfile> updateChildProfile(@PathVariable Long id, @RequestBody ChildProfile childProfile) {
+        ChildProfile updatedProfile = service.updateChildProfile(id, childProfile);
+        if (updatedProfile != null) {
+            return ResponseEntity.ok(updatedProfile);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteChildProfile(@PathVariable Long id) {
+        service.deleteChildProfile(id);
+        return ResponseEntity.noContent().build();
+    }
+}
