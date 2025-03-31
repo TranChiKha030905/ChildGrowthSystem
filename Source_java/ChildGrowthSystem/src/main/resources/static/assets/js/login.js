@@ -10,9 +10,6 @@ registerLink.addEventListener('click', ()=>{
     wrapper.classList.add('active');
 })
 
-loginLink.addEventListener('click', ()=>{
-    wrapper.classList.remove('active');
-})
 
 iconClose.addEventListener('click',()=>{
     wrapper.classList.remove('active-popup');
