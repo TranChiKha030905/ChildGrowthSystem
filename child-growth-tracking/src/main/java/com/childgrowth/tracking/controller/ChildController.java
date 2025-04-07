@@ -36,7 +36,7 @@ public class ChildController {
     @GetMapping("/add")
     public String addChildForm(Model model) {
         model.addAttribute("child", new ChildProfile());
-        return "add-child"; // ⚠️
+        return "child/add"; // ⚠️
     }
 
     // Lưu trẻ mới

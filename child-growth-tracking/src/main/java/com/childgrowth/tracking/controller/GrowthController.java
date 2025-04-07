@@ -34,7 +34,7 @@ public class GrowthController {
         List<ChildProfile> children = childService.getChildrenByUser(user);
         model.addAttribute("children", children);
         model.addAttribute("record", new GrowthRecord()); // CHÍNH LÀ "record"
-        return "add-child";
+        return "growth/add";
     }
 
     @PostMapping("/add")
