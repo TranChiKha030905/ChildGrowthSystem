@@ -1,19 +1,109 @@
-create database Child;
-Drop database  Child;
+-- Tạo database
+CREATE DATABASE Child;
 
-Use Child;
+-- Xóa database (nếu cần)
+DROP DATABASE Child;
 
-Drop table Users;
+-- Sử dụng database
+USE Child;
+
+-- Bảng 1: Users
+DROP TABLE Users;
 CREATE TABLE Users (
-  UserID INT PRIMARY KEY AUTO_INCREMENT,  -- ID người dùng, tự động tăng
-  Username VARCHAR(50) NOT NULL UNIQUE,   -- Tên đăng nhập (duy nhất, không rỗng)
-  PasswordHash VARCHAR(255) NOT NULL,     -- Mật khẩu đã mã hóa
-  Email VARCHAR(100) NOT NULL UNIQUE,     -- Email người dùng (duy nhất)
-  FullName VARCHAR(100) NOT NULL,         -- Họ và tên đầy đủ
-  RoleName ENUM('Admin', 'Doctor', 'User') NOT NULL, -- Vai trò của người dùng (Admin, Doctor, User)
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP -- Ngày tạo tài khoản
+  UserID INT PRIMARY KEY AUTO_INCREMENT,
+  Username VARCHAR(50) NOT NULL UNIQUE,
+  PasswordHash VARCHAR(255) NOT NULL,
+  Email VARCHAR(100) NOT NULL UNIQUE,
+  FullName VARCHAR(100) NOT NULL,
+  RoleName ENUM('Admin', 'Doctor', 'User') NOT NULL,
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
 );
--- Mẫu 1: Tài khoản Admin
+
+-- Bảng 2: ChildProfiles
+DROP TABLE ChildProfiles;
+CREATE TABLE ChildProfiles (
+  ChildID INT PRIMARY KEY AUTO_INCREMENT,
+  UserID INT NOT NULL,
+  ChildName VARCHAR(100) NOT NULL,
+  DateOfBirth DATE NOT NULL,
+  Gender ENUM('Male', 'Female') NOT NULL,
+  HeightCm DECIMAL(5,2),
+  WeightKg DECIMAL(5,2),
+  BMI DECIMAL(4,2),
+  FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Bảng 3: Memberships
+CREATE TABLE Memberships (
+  MembershipID INT PRIMARY KEY AUTO_INCREMENT,
+  UserID INT NOT NULL UNIQUE,
+  MembershipType ENUM('Basic', 'Premium') NOT NULL,
+  Price DECIMAL(10,2) NOT NULL,
+  StartDate DATE NOT NULL,
+  EndDate DATE NOT NULL,
+  PaymentMethod VARCHAR(50) NOT NULL,
+  TransactionStatus ENUM('Success', 'Failed') NOT NULL,
+  FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Bảng 4: Alerts
+CREATE TABLE Alerts (
+  AlertID INT PRIMARY KEY AUTO_INCREMENT,
+  ChildID INT NOT NULL,
+  AlertType VARCHAR(50) NOT NULL,
+  Description TEXT NOT NULL,
+  AlertDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (ChildID) REFERENCES ChildProfiles(ChildID)
+);
+
+-- Bảng 5: Consultations
+CREATE TABLE Consultations (
+  ConsultationID INT PRIMARY KEY AUTO_INCREMENT,
+  UserID INT NOT NULL,
+  DoctorID INT NOT NULL,
+  ChildID INT NOT NULL,
+  RequestDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+  Message TEXT NOT NULL,
+  Status ENUM('Pending', 'Completed') DEFAULT 'Pending',
+  FeedbackText TEXT,
+  FeedbackCreatedAt DATETIME,
+  FOREIGN KEY (UserID) REFERENCES Users(UserID),
+  FOREIGN KEY (DoctorID) REFERENCES Users(UserID),
+  FOREIGN KEY (ChildID) REFERENCES ChildProfiles(ChildID)
+);
+
+-- Bảng 6: Reports
+CREATE TABLE Reports (
+  ReportID INT PRIMARY KEY AUTO_INCREMENT,
+  ReportName VARCHAR(100) NOT NULL,
+  Description TEXT,
+  GeneratedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  GeneratedByUserID INT NOT NULL,
+  ReportData JSON,
+  FOREIGN KEY (GeneratedByUserID) REFERENCES Users(UserID)
+);
+
+-- Bảng 7: ContentPosts
+CREATE TABLE ContentPosts (
+  PostID INT PRIMARY KEY AUTO_INCREMENT,
+  Title VARCHAR(255) NOT NULL,
+  Content TEXT NOT NULL,
+  PostType ENUM('Blog', 'FAQ') NOT NULL,
+  AuthorID INT,
+  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (AuthorID) REFERENCES Users(UserID)
+);
+
+-- full bảng select
+SELECT * FROM Users;
+SELECT * FROM ChildProfiles;
+SELECT * FROM Memberships;
+SELECT * FROM Alerts;
+SELECT * FROM Consultations;
+SELECT * FROM Reports;
+SELECT * FROM ContentPosts;
+
+-- Bảng 1: Users
 INSERT INTO Users (Username, PasswordHash, Email, FullName, RoleName)
 VALUES 
 -- 5 admin
@@ -276,20 +366,9 @@ VALUES
 ('User_Vỹ_255', 'Vy255', 'Vy255@gmail.com', 'Trần Thị Vỹ', 'User'),
 ('User_Quý_256', 'Quy256', 'Quy256@gmail.com', 'Phạm Văn Quý', 'User'),
 ('User_Thắm_257', 'Tham257', 'Tham257@gmail.com', 'Nguyễn Thị Thắm', 'User');
-select* from Users;
--- BẢNG 2: ChildProfiles - Quản lý hồ sơ trẻ em
-Drop table ChildProfiles;
-CREATE TABLE ChildProfiles (
-  ChildID INT PRIMARY KEY AUTO_INCREMENT,  -- ID hồ sơ trẻ, tự động tăng
-  UserID INT NOT NULL,                      -- Chủ sở hữu hồ sơ này (người dùng)
-  ChildName VARCHAR(100) NOT NULL,         -- Tên trẻ
-  DateOfBirth DATE NOT NULL,               -- Ngày sinh
-  Gender ENUM('Male', 'Female') NOT NULL,  -- Giới tính của trẻ
-  HeightCm DECIMAL(5,2),                   -- Chiều cao (cm)
-  WeightKg DECIMAL(5,2),                   -- Cân nặng (kg)
-  BMI DECIMAL(4,2),                        -- Chỉ số BMI
-  FOREIGN KEY (UserID) REFERENCES Users(UserID) -- Liên kết với Users để biết hồ sơ này thuộc về ai
-);
+
+
+-- bảng 2 ChildProfiles;
 INSERT INTO ChildProfiles (UserID, ChildName, DateOfBirth, Gender, HeightCm, WeightKg, BMI) 
 VALUES
 (57, 'Bùi Khánh Gia Hoàng', '2023-03-05', 'Male', '86.45', '12.67', '16.95'),
@@ -728,20 +807,9 @@ VALUES
 (88, 'Đỗ Đức Hòa', '2005-02-01', 'Female', '163.33', '58.15', '21.8'),
 (89, 'Đỗ Đức Trọng Tú', '2005-03-18', 'Female', '163.34', '58.2', '21.81'),
 (90, 'Đỗ Đức Xuân Xuân', '2005-04-01', 'Female', '163.34', '58.22', '21.82');
-SELECT * FROM ChildProfiles;
+
 
 -- BẢNG 3: Memberships - Quản lý gói thành viên & thanh toán
-CREATE TABLE Memberships (
-  MembershipID INT PRIMARY KEY AUTO_INCREMENT, -- ID gói thành viên, tự động tăng
-  UserID INT NOT NULL UNIQUE,                  -- ID người dùng sở hữu gói này
-  MembershipType ENUM('Basic', 'Premium') NOT NULL, -- Loại gói thành viên
-  Price DECIMAL(10,2) NOT NULL,                -- Giá tiền của gói
-  StartDate DATE NOT NULL,                     -- Ngày bắt đầu
-  EndDate DATE NOT NULL,                       -- Ngày hết hạn
-  PaymentMethod VARCHAR(50) NOT NULL,          -- Phương thức thanh toán
-  TransactionStatus ENUM('Success', 'Failed') NOT NULL, -- Trạng thái thanh toán
-  FOREIGN KEY (UserID) REFERENCES Users(UserID) -- Liên kết với Users
-);
 INSERT INTO Memberships (UserID, MembershipType, Price, StartDate, EndDate, PaymentMethod, TransactionStatus)
 VALUES 
 (4, 'Basic', 150000.00, '2025-03-01', '2025-06-01', 'Credit Card', 'Success'), -- nguyenvantuan578
@@ -749,18 +817,10 @@ VALUES
 (6, 'Basic', 150000.00, '2025-02-20', '2025-05-20', 'Cash', 'Success'), -- phamvanhung367
 (7, 'Premium', 300000.00, '2025-03-10', '2025-09-10', 'Credit Card', 'Success'), -- duongthilan452
 (8, 'Basic', 150000.00, '2025-03-21', '2025-06-21', 'Mobile Payment', 'Success'); -- phanvanminh819
-SELECT * FROM Memberships;
+
+
 
 -- BẢNG 4: Alerts - Quản lý cảnh báo sức khỏe của trẻ
-CREATE TABLE Alerts (
-  AlertID INT PRIMARY KEY AUTO_INCREMENT, -- ID cảnh báo, tự động tăng
-  ChildID INT NOT NULL,                   -- Hồ sơ trẻ nhận cảnh báo
-  AlertType VARCHAR(50) NOT NULL,         -- Loại cảnh báo (Sốt, Dị ứng, ...)
-  Description TEXT NOT NULL,              -- Mô tả chi tiết
-  AlertDate DATETIME DEFAULT CURRENT_TIMESTAMP, -- Ngày tạo cảnh báo
-  FOREIGN KEY (ChildID) REFERENCES ChildProfiles(ChildID) -- Liên kết với ChildProfiles
-);
-
 INSERT INTO Alerts (ChildID, AlertType, Description, AlertDate)
 VALUES 
 (1, 'Fever', 'Trẻ bị sốt cao 38.5°C, cần theo dõi thêm', '2025-03-20 10:30:00'), -- Nguyễn Văn An
@@ -768,22 +828,9 @@ VALUES
 (3, 'Cough', 'Ho kéo dài hơn 3 ngày, cần thăm khám', '2025-03-21 09:00:00'), -- Phạm Văn Bình
 (4, 'Weight Loss', 'Cân nặng giảm bất thường trong 1 tháng', '2025-03-18 16:45:00'), -- Dương Thị Hoa
 (5, 'Fever', 'Sốt nhẹ 37.8°C kèm mệt mỏi', '2025-03-21 08:20:00'); -- Phan Văn Khôi
-SELECT * FROM Alerts;
+
+
 -- BẢNG 5: Consultations - Quản lý tư vấn giữa người dùng và bác sĩ
-CREATE TABLE Consultations (
-  ConsultationID INT PRIMARY KEY AUTO_INCREMENT,  -- ID tư vấn, tự động tăng
-  UserID INT NOT NULL,                            -- Người yêu cầu tư vấn
-  DoctorID INT NOT NULL,                          -- Bác sĩ tư vấn
-  ChildID INT NOT NULL,                           -- Hồ sơ trẻ liên quan
-  RequestDate DATETIME DEFAULT CURRENT_TIMESTAMP, -- Ngày yêu cầu tư vấn
-  Message TEXT NOT NULL,                          -- Nội dung tư vấn
-  Status ENUM('Pending', 'Completed') DEFAULT 'Pending', -- Trạng thái tư vấn
-  FeedbackText TEXT,                              -- Nội dung phản hồi từ user
-  FeedbackCreatedAt DATETIME,                     -- Thời gian phản hồi
-  FOREIGN KEY (UserID) REFERENCES Users(UserID),
-  FOREIGN KEY (DoctorID) REFERENCES Users(UserID),
-  FOREIGN KEY (ChildID) REFERENCES ChildProfiles(ChildID)
-);
 INSERT INTO Consultations (UserID, DoctorID, ChildID, RequestDate, Message, Status, FeedbackText, FeedbackCreatedAt)
 VALUES 
 (4, 2, 1, '2025-03-20 11:00:00', 'Con tôi bị sốt cao, cần tư vấn gấp', 'Completed', 'Cảm ơn bác sĩ, rất hữu ích!', '2025-03-20 15:00:00'), -- nguyenvantuan578 & lethibich235
@@ -791,36 +838,18 @@ VALUES
 (6, 2, 3, '2025-03-21 10:00:00', 'Trẻ ho nhiều, có cần đi khám không?', 'Pending', NULL, NULL), -- phamvanhung367 & lethibich235
 (7, 3, 4, '2025-03-18 17:00:00', 'Con tôi giảm cân bất thường, cần kiểm tra gì?', 'Completed', 'Bác sĩ tư vấn rất tận tình', '2025-03-19 09:00:00'), -- duongthilan452 & dinhvannam682
 (8, 2, 5, '2025-03-21 09:00:00', 'Con tôi sốt nhẹ, có cần thuốc không?', 'Pending', NULL, NULL); -- phanvanminh819 & lethibich235
-SELECT * FROM Consultations;
+
 
 -- BẢNG 6: Reports - Quản lý báo cáo & dashboard
-CREATE TABLE Reports (
-  ReportID INT PRIMARY KEY AUTO_INCREMENT,    -- ID báo cáo, tự động tăng
-  ReportName VARCHAR(100) NOT NULL,           -- Tên báo cáo
-  Description TEXT,                           -- Mô tả báo cáo
-  GeneratedAt DATETIME DEFAULT CURRENT_TIMESTAMP, -- Ngày tạo báo cáo
-  GeneratedByUserID INT NOT NULL,             -- Người tạo báo cáo (Admin)
-  ReportData JSON,                            -- Dữ liệu thống kê dạng JSON
-  FOREIGN KEY (GeneratedByUserID) REFERENCES Users(UserID) -- Liên kết với Users
-);
 INSERT INTO Reports (ReportName, Description, GeneratedAt, GeneratedByUserID, ReportData)
 VALUES 
 ('Health Stats Mar 2025', 'Thống kê sức khỏe trẻ em tháng 3/2025', '2025-03-21 14:00:00', 1, '{"total_children": 5, "avg_bmi": 14.78, "alerts": 5}'), -- Admin_1
 ('Membership Report', 'Báo cáo gói thành viên tháng 3/2025', '2025-03-21 15:00:00', 1, '{"basic": 3, "premium": 2, "total_revenue": 1050000}'); -- Admin_1
-SELECT * FROM Reports;
+
+
 -- BẢNG 7: ContentPosts - Quản lý Blog & FAQ
-CREATE TABLE ContentPosts (
-  PostID INT PRIMARY KEY AUTO_INCREMENT,  -- ID bài viết, tự động tăng
-  Title VARCHAR(255) NOT NULL,            -- Tiêu đề bài viết
-  Content TEXT NOT NULL,                  -- Nội dung bài viết
-  PostType ENUM('Blog', 'FAQ') NOT NULL,  -- Loại bài (Blog hoặc FAQ)
-  AuthorID INT,                            -- Người viết bài (nếu có)
-  CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP, -- Ngày tạo bài viết
-  FOREIGN KEY (AuthorID) REFERENCES Users(UserID) -- Liên kết với Users (Admin viết bài)
-);
 INSERT INTO ContentPosts (Title, Content, PostType, AuthorID, CreatedAt)
 VALUES 
 ('Cách chăm sóc trẻ bị sốt', 'Hướng dẫn hạ sốt tại nhà và khi nào cần đi bác sĩ...', 'Blog', 1, '2025-03-20 08:00:00'), -- Admin_1
 ('Dị ứng ở trẻ: Những điều cần biết', 'Nguyên nhân, triệu chứng và cách xử lý dị ứng...', 'Blog', 1, '2025-03-19 10:00:00'), -- Admin_1
 ('Trẻ ho lâu có nguy hiểm không?', 'Giải đáp thắc mắc về ho kéo dài ở trẻ...', 'FAQ', 1, '2025-03-21 09:00:00'); -- Admin_1
-SELECT * FROM ContentPosts;
