@@ -25,7 +25,7 @@ public class securityconfig {
         return new BCryptPasswordEncoder();  // Bạn có thể dùng các thuật toán mã hóa khác như bcrypt, argon2...
     }
 
-    @Bean
+    /*@Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth                                                   // yêu cầu chứng thực
@@ -42,14 +42,49 @@ public class securityconfig {
                 .logout(logout -> logout.permitAll());
 
         return http.build();
+    }*/
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/", "/index", "/assets/**", "/forms/**", "/Admin/assets/**").permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")  // Chỉ ADMIN được vào admin page
+                                .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/admin")  // Điều hướng về trang admin sau khi đăng nhập thành công
+                        .failureUrl("/login?error=true")
+                        .loginProcessingUrl("/j_spring_security_check")
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                );
+
+        return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {                                                                                     // cài đặt 1 tải khoảng bộ nhớ để auto đăng nhập đúng
-        UserDetails user1 = User.withUsername("user@gmail.com")
+        UserDetails user1 = User.withUsername("Admin@gmail.com")
+                .password(passwordEncoder().encode("123456"))
+                .roles("ADMIN")
+                .build();
+        UserDetails user2 = User.withUsername("user@gmail.com")
                 .password(passwordEncoder().encode("123456"))
                 .roles("USER")
                 .build();
-        return new InMemoryUserDetailsManager(user1);
+        UserDetails user3 = User.withUsername("DOCTOR@gmail.com")
+                .password(passwordEncoder().encode("123456"))
+                .roles("DOCTOR")
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2, user3);
     }
+
 }
