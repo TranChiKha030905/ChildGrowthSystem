@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><meta charset="UTF-8"><title>Thêm Trẻ Mới</title></head>
+<body>
+<h2>Thêm Hồ Sơ Trẻ Mới</h2>
+
+<form th:action="@{/children/add}" method="post" th:object="${child}">
+    <label>Họ tên:</label>
+    <input type="text" th:field="*{name}" required/><br/>
+
+    <label>Ngày sinh:</label>
+    <input type="date" th:field="*{birthDate}" required/><br/>
+
+    <label>Giới tính:</label>
+    <select th:field="*{gender}">
+        <option value="Male">Nam</option>
+        <option value="Female">Nữ</option>
+    </select><br/>
+
+    <button type="submit">Lưu</button>
+</form>
+
+</body>
+</html>

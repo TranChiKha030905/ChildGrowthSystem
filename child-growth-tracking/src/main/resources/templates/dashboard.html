@@ -1,9 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head><title>Dashboard</title></head>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
 <body>
-<h2>Welcome to Dashboard</h2>
-<p>Chúc mừng bạn đã đăng nhập thành công!</p>
-<a th:href="@{/logout}">Logout</a>
+
+<h2>🎉 Đăng nhập thành công!</h2>
+
+<ul>
+    <li><a th:href="@{/children}">👶 Danh sách Trẻ</a></li>
+    <li><a th:href="@{/children/add}">➕ Thêm Trẻ</a></li>
+    <li><a th:href="@{/growth/add}">📈 Ghi chỉ số Tăng trưởng</a></li>
+</ul>
+
+<a th:href="@{/logout}">🔓 Đăng xuất</a>
+
 </body>
 </html>

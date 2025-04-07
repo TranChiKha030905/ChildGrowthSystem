@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head><title>Chỉ Số Tăng Trưởng</title></head>
+<body>
+<h2>Chỉ số của <span th:text="${child.name}"></span></h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Ngày</th>
+        <th>Chiều cao (cm)</th>
+        <th>Cân nặng (kg)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="record : ${records}">
+        <td th:text="${record.date}"></td>
+        <td th:text="${record.height}"></td>
+        <td th:text="${record.weight}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/dashboard}">⬅ Quay lại Dashboard</a>
+</body>
+</html>

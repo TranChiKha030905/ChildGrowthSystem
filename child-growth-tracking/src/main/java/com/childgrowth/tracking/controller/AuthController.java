@@ -20,18 +20,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user) {
+    public String register(@ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/login";
     }
 
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String loginForm() {
         return "login";
     }
 
     @GetMapping("/dashboard")
-    public String showDashboard() {
+    public String dashboard() {
         return "dashboard";
     }
 }
