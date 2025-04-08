@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm dữ liệu phát triển</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Thêm dữ liệu phát triển</h2>
+<a href="/dashboard">← Quay về Dashboard</a><br><br>
+
+<form th:action="@{/growth/add}" th:object="${record}" method="post">
+    <label>Trẻ:</label>
+    <select th:field="*{child.id}">
+        <option th:each="child : ${children}"
+                th:value="${child.id}"
+                th:text="${child.name}"></option>
+    </select><br>
+
+    <label>Chiều cao (cm):</label>
+    <input type="number" th:field="*{height}" step="0.1" required/><br>
+
+    <label>Cân nặng (kg):</label>
+    <input type="number" th:field="*{weight}" step="0.1" required/><br>
+
+    <label>Ghi chú:</label>
+    <input type="text" th:field="*{note}"/><br>
+
+    <button type="submit">Lưu</button>
+</form>
+</body>
+</html>

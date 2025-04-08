@@ -1,29 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Thêm Chỉ Số Tăng Trưởng</title>
+    <title>Thêm trẻ mới</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-<h2>Thêm Chỉ Số Tăng Trưởng</h2>
-<form th:action="@{/growth/add}" th:object="${record}" method="post">
-
-    <label>Trẻ:</label>
-    <select th:field="*{child}" required>
-        <option th:each="child : ${children}"
-                th:value="${child.id}"
-                th:text="${child.name}">
-        </option>
-    </select><br/>
-
-    <label>Chiều cao (cm):</label>
-    <input type="number" th:field="*{height}" required/><br/>
-
-    <label>Cân nặng (kg):</label>
-    <input type="number" th:field="*{weight}" required/><br/>
-
-    <label>Ngày ghi nhận:</label>
-    <input type="date" th:field="*{date}" required/><br/>
-
+<h2>Thêm trẻ</h2>
+<a href="/dashboard">← Quay về Dashboard</a><br><br>
+<form th:action="@{/children/add}" method="post" th:object="${child}">
+    Họ tên: <input type="text" th:field="*{name}"/><br>
+    Ngày sinh: <input type="date" th:field="*{birthDate}"/><br>
+    Giới tính: <input type="text" th:field="*{gender}"/><br>
     <button type="submit">Lưu</button>
 </form>
 </body>

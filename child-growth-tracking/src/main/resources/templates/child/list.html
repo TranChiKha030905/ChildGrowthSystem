@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Child List</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>Danh sách trẻ em</h2>
+<a href="/dashboard">← Quay về Dashboard</a><br><br>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Họ tên</th>
+        <th>Ngày sinh</th>
+        <th>Giới tính</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="child : ${children}">
+        <td th:text="${child.name}">Tên</td>
+        <td th:text="${#temporals.format(child.birthDate, 'dd/MM/yyyy')}">01/01/2020</td>
+        <td th:text="${child.gender}">Nam</td>
+        <td>
+            <a th:href="@{'/growth/child/' + ${child.id} + '/records'}">Theo dõi phát triển</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
