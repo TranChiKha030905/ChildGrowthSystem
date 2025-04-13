@@ -21,12 +21,16 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegistrationPage(Model model) {
-        model.addAttribute("user", new User());
+        User user= new User();
+        model.addAttribute("user", user);
         return "register";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("ROLE_MEMBER"); // set mặc định nếu không được chọn trong form
+        }
         try {
             userService.registerUser(user);
             return "redirect:/login?success";

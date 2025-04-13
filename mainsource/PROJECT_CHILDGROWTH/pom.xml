@@ -59,6 +59,10 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId> <!-- dùng spring boot 3 -->
+        </dependency>
     </dependencies>
 
     <build>
