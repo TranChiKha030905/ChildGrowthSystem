@@ -20,4 +20,5 @@ public class AuthController {
         model.addAttribute("user", new Users());
         return "register";
     }
+    
 }

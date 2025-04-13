@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Child Growth Tracking System</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+
+    <!-- Favicons -->
+    <link th:href="@{assets/img/favicon.png}" rel="icon">
+    <link th:href="@{assets/img/apple-touch-icon.png}" rel="apple-touch-icon">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link th:href="@{assets/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{assets/vendor/bootstrap-icons/bootstrap-icons.css}" rel="stylesheet">
+    <link th:href="@{assets/vendor/aos/aos.css}" rel="stylesheet">
+    <link th:href="@{assets/vendor/glightbox/css/glightbox.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/swiper/swiper-bundle.min.css}" rel="stylesheet">
+
+    <!-- Main CSS File -->
+    <link th:href="@{/assets/css/main.css}" rel="stylesheet">
+
+    <!-- =======================================================
+    * Template Name: OnePage
+    * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
+    * Updated: Aug 07 2024 with Bootstrap v5.3.3
+    * Author: BootstrapMade.com
+    * License: https://bootstrapmade.com/license/
+    ======================================================== -->
+    <style>
+        th,td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        th {
+            background: #2487ce;
+            color: white;
+        }
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100px;
+            align-content: center;
+        }
+
+        .delete-btn:hover {
+            background: #e3838d;
+            color: black;
+        }
+        textarea {
+            max-lines: 200;
+        }
+        .notification {
+            display: none;
+            position: absolute;
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            background: none;
+            color: rgb(0, 0, 0);
+            border-radius: 5px;
+            animation: slideIn 1s ease-out forwards;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body class="page-index">
+<header th:replace="layout/header :: header"></header>
+
+<main class="testimonials">
+    <!-- Page Title -->
+    <div class="page-title accent-background">
+        <div class="container">
+            <h1>FeedBack</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a th:href="@{/index}">Home</a></li>
+                    <li class="current">FeedBack</li>
+                </ol>
+            </nav>
+        </div>
+    </div><!-- End Page Title -->
+    <!-- Testimonials Section -->
+
+    <div id="notification" class="notification">Bạn đã gửi phản hồi!</div>
+
+    <form th:action="@{/member/feedback}" method="post">
+        <div class="feedback">
+            <h2>Gửi phản hồi</h2>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="name">Tên của bạn:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="feedback">Phản hồi:</label>
+                    <textarea id="feedback" name="feedback" rows="4" placeholder="Nhập góp ý..."required></textarea>
+                </div>
+                <div class="form-group rating">
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                    <p style="font-size: 1.5em;"><strong>: Đánh giá </strong></p>
+                </div>
+                <button type="submit">Gửi phản hồi</button>
+            </form>
+        </div>
+    </form>
+
+
+    <h2>Phản hồi của tôi</h2>
+    <table border="1" id="feedbackTable" >
+        <thead>
+        <tr>
+            <th>Tên</th>
+            <th>Email</th>
+            <th>Phản hồi</th>
+            <th>Đánh giá</th>
+            <th>Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+
+    <footer th:replace="layout/footer :: footer"></footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+
+    <!-- Vendor JS Files -->
+    <div th:replace="layout/script :: script"></div>
+
+
+    <!-- Main JS File -->
+    <script th:src="@{assets/js/feekback.js}">
+    </script>
+
+</body>
+
+</html>

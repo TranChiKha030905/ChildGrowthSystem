@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Doctor Dashboard - Child Growth Tracking</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Doctor Dashboard</h1>
+        
+        <div class="section">
+            <h2>My Patients</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Child Name</th>
+                            <th>Age</th>
+                            <th>Parent</th>
+                            <th>Last Check-up</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="patient : ${patients}">
+                            <td th:text="${patient.name}"></td>
+                            <td th:text="${patient.age}"></td>
+                            <td th:text="${patient.parent.fullName}"></td>
+                            <td th:text="${#temporals.format(patient.lastCheckup, 'dd/MM/yyyy')}"></td>
+                            <td>
+                                <a th:href="@{/doctor/patient/{id}(id=${patient.id})}" class="btn btn-primary">View Details</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Quick Actions</h2>
+            <div class="grid">
+                <a th:href="@{/doctor/requests}" class="card">
+                    <h3>Advice Requests</h3>
+                    <p>View and respond to parent requests</p>
+                </a>
+                <a th:href="@{/doctor/schedule}" class="card">
+                    <h3>Appointments</h3>
+                    <p>Manage your appointments</p>
+                </a>
+                <a th:href="@{/doctor/reports}" class="card">
+                    <h3>Reports</h3>
+                    <p>View patient reports and analytics</p>
+                </a>
+            </div>
+        </div>
+
+        <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+
+<div>
+    <a href="/doctor/advice-requests">Tư vấn chờ phản hồi</a> |
+    <a href="/doctor/patient-details">Chi tiết bệnh nhi</a> |
+    <a href="/doctor/reports">Xem báo cáo</a>
+</div>
+
+
+<div class="text-end p-3">
+    <a class="btn btn-outline-secondary" href="/">🏠 Trang chủ</a>
+    <a class="btn btn-outline-info" href="/dashboard">📊 Dashboard</a>
+    <a class="btn btn-outline-danger" href="/logout">🚪 Đăng xuất</a>
+</div>
+
+</body>
+</html> 

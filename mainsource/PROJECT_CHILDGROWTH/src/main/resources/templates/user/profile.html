@@ -1,0 +1,14 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hồ sơ người dùng</title>
+</head>
+<body>
+<h1>Thông tin người dùng</h1>
+<p>Tên đăng nhập: <span th:text="${user.username}">Username</span></p>
+<p>Vai trò: <span th:text="${user.role}">Role</span></p>
+<!-- Thêm thông tin khác nếu cần -->
+</body>
+</html>
