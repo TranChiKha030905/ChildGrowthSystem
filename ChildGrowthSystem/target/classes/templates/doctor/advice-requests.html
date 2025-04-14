@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Advice Requests - Child Growth Tracking</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Advice Requests</h1>
+        
+        <div class="actions">
+            <a th:href="@{/doctor/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <div class="section">
+            <h2>Pending Requests</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Child</th>
+                            <th>Parent</th>
+                            <th>Question</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${pendingRequests}">
+                            <td th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${request.child.name}"></td>
+                            <td th:text="${request.parent.fullName}"></td>
+                            <td th:text="${request.question}"></td>
+                            <td>
+                                <span class="badge badge-warning">Pending</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/doctor/advice-request/{id}(id=${request.id})}" class="btn btn-primary">Respond</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Responded Requests</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Child</th>
+                            <th>Parent</th>
+                            <th>Question</th>
+                            <th>Response</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${respondedRequests}">
+                            <td th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${request.child.name}"></td>
+                            <td th:text="${request.parent.fullName}"></td>
+                            <td th:text="${request.question}"></td>
+                            <td th:text="${request.response}"></td>
+                            <td>
+                                <span class="badge badge-success">Responded</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

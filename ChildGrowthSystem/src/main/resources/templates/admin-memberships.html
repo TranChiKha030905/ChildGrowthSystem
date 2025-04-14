@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quản lý gói thành viên</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Gói thành viên</h2>
+
+    <form th:action="@{/admin/memberships}" method="post" th:object="${plan}" class="row g-3" >
+        <div class="col-md-3"><input th:field="*{name}" class="form-control" placeholder="Tên gói" required></div>
+        <div class="col-md-3"><input th:field="*{description}" class="form-control" placeholder="Mô tả"></div>
+        <div class="col-md-2"><input th:field="*{maxChildren}" class="form-control" type="number" placeholder="Số trẻ"></div>
+        <div class="col-md-2">
+            <select th:field="*{allowDoctorConsult}" class="form-control">
+                <option value="true">Tư vấn Bác sĩ</option>
+                <option value="false">Không</option>
+            </select>
+        </div>
+        <div class="col-md-2"><button class="btn btn-primary">Thêm gói</button></div>
+    </form>
+
+    <hr class="my-4">
+    <table class="table table-bordered">
+        <thead><tr><th>Tên</th><th>Mô tả</th><th>Số trẻ</th><th>Tư vấn</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="p : ${plans}">
+            <td th:text="${p.name}"></td>
+            <td th:text="${p.description}"></td>
+            <td th:text="${p.maxChildren}"></td>
+            <td th:text="${p.allowDoctorConsult}"></td>
+            <td>
+                <form th:action="@{|/admin/memberships/delete/${p.id}|}" method="post">
+                    <button class="btn btn-danger btn-sm">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

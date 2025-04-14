@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Advice Requests - Child Growth Tracking</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Advice Requests</h1>
+        
+        <div class="actions">
+            <a th:href="@{/member/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <div class="section">
+            <h2>My Requests</h2>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Child</th>
+                            <th>Question</th>
+                            <th>Response</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="request : ${requests}">
+                            <td th:text="${#temporals.format(request.createdAt, 'dd/MM/yyyy')}"></td>
+                            <td th:text="${request.child.name}"></td>
+                            <td th:text="${request.question}"></td>
+                            <td th:text="${request.response ?: 'Pending'}"></td>
+                            <td>
+                                <span th:if="${request.response}" class="badge badge-success">Responded</span>
+                                <span th:unless="${request.response}" class="badge badge-warning">Pending</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
