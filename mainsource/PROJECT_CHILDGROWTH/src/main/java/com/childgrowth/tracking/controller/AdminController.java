@@ -20,19 +20,19 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "admin/dashboard";
+        return "/admin/dashboard";
     }
 
     @GetMapping("/members")
     public String viewMembers(Model model) {
         model.addAttribute("members", userService.getAllUsers());
-        return "admin/members";
+        return "/admin/members";
     }
 
     @GetMapping("/doctors/pending")
     public String viewPendingDoctors(Model model) {
         model.addAttribute("pendingApprovals", doctorApprovalService.getPendingApprovals());
-        return "admin/pending-doctors";
+        return "/admin/pending-doctors";
     }
 
     @PostMapping("/doctors/approve/{id}")

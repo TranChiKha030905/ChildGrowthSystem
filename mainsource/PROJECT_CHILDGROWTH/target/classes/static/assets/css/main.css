@@ -697,7 +697,9 @@ button:hover {
     visibility: visible;
   }
 }
-
+  navmenu .nav_dashboard a:hover{
+    color: var(--contrast-color);
+  }
 /* Navmenu - Mobile */
 @media (max-width: 1199px) {
   .mobile-nav-toggle {

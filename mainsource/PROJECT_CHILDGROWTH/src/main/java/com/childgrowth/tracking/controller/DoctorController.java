@@ -18,12 +18,12 @@ public class DoctorController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "doctor/dashboard";
+        return "/doctor/dashboard";
     }
 
     @GetMapping("/requests")
     public String viewDoctorRequests(Model model) {
         model.addAttribute("doctors", userService.getAllUsers()); // Có thể thay bằng filter riêng
-        return "doctor/requests";
+        return "/doctor/requests";
     }
 }

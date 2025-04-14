@@ -29,7 +29,7 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {
         if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("ROLE_MEMBER"); // set mặc định nếu không được chọn trong form
+            user.setRole("MEMBER"); // set mặc định nếu không được chọn trong form
         }
         try {
             userService.registerUser(user);
