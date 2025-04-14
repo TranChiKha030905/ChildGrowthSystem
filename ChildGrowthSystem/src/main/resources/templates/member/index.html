@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Trang của Thành viên</title></head>
+<body>
+<h2>Xin chào, <span th:text="${#authentication.name}"></span>!</h2>
+<ul>
+    <li><a href="/member/children">Quản lý hồ sơ trẻ</a></li>
+    <li><a href="/member/feedback">Gửi góp ý</a></li>
+    <li><a href="/profile">Hồ sơ cá nhân</a></li>
+    <li><a href="/logout">Đăng xuất</a></li>
+</ul>
+</body>
+</html>
