@@ -1,0 +1,19 @@
+// GrowthRecordRepository.java
+package com.example.childgrowthsystem.repository;
+
+import com.childgrowth.tracking.model.GrowthRecord;
+import com.childgrowth.tracking.model.Child;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Repository
+public interface GrowthRecordRepository extends JpaRepository<GrowthRecord, Long> {
+    List<GrowthRecord> findByChild(Child child);
+    List<GrowthRecord> findByChildOrderByMeasurementDateDesc(Child child);
+    List<GrowthRecord> findByChildAndMeasurementDateBetween(Child child, LocalDateTime startDate, LocalDateTime endDate);
+    List<GrowthRecord> findByChildAndIsVerified(Child child, boolean isVerified);
+    GrowthRecord findTopByChildOrderByMeasurementDateDesc(Child child);
+    List<GrowthRecord> findByChildIdOrderByMeasurementDateAsc(Long childId);
+}
