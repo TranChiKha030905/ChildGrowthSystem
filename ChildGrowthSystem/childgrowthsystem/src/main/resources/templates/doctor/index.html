@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Trang Bác sĩ</title></head>
+<body>
+<h2>Chào bác sĩ <span th:text="${#authentication.name}"></span>!</h2>
+<p>Xem các yêu cầu tư vấn từ thành viên:</p>
+<a href="/doctor/requests">Xem yêu cầu tư vấn</a>
+<br/><a href="/logout">Đăng xuất</a>
+</body>
+</html>

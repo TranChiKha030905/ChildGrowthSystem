@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Growth Reports - Child Growth Tracking</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>Growth Reports</h1>
+        
+        <div class="actions">
+            <a th:href="@{/member/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+
+        <div class="section">
+            <h2>Select Child</h2>
+            <form th:action="@{/member/reports}" method="get" class="form" 
+                <div class="form-group">
+                    <label for="childId">Child</label>
+                    <select id="childId" name="childId" class="form-control" onchange="this.form.submit()">
+                        <option value="">Select a child</option>
+                        <option th:each="child : ${children}" 
+                                th:value="${child.id}" 
+                                th:text="${child.name}"
+                                th:selected="${selectedChild != null && selectedChild.id == child.id}">
+                        </option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${selectedChild != null}" class="section">
+            <h2 th:text="${selectedChild.name + ' - Growth Analytics'}">Child Name - Growth Analytics</h2>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>Height Growth</h3>
+                    <div class="chart-container">
+                        <!-- Height growth chart will be rendered here -->
+                        <img th:src="@{/api/charts/height(childId=${selectedChild.id})}" alt="Height Growth Chart" class="chart">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Weight Growth</h3>
+                    <div class="chart-container">
+                        <!-- Weight growth chart will be rendered here -->
+                        <img th:src="@{/api/charts/weight(childId=${selectedChild.id})}" alt="Weight Growth Chart" class="chart">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>BMI Trend</h3>
+                    <div class="chart-container">
+                        <!-- BMI trend chart will be rendered here -->
+                        <img th:src="@{/api/charts/bmi(childId=${selectedChild.id})}" alt="BMI Trend Chart" class="chart">
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Head Circumference</h3>
+                    <div class="chart-container">
+                        <!-- Head circumference chart will be rendered here -->
+                        <img th:src="@{/api/charts/head(childId=${selectedChild.id})}" alt="Head Circumference Chart" class="chart">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>Growth Percentiles</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Measurement</th>
+                                <th>Current Value</th>
+                                <th>Percentile</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Height</td>
+                                <td th:text="${#numbers.formatDecimal(latestRecord.height, 1, 2) + ' cm'}"></td>
+                                <td th:text="${heightPercentile + '%'}"></td>
+                                <td>
+                                    <span th:class="${heightStatus == 'NORMAL' ? 'badge badge-success' : (heightStatus == 'BELOW' ? 'badge badge-warning' : 'badge badge-danger')}"
+                                          th:text="${heightStatus}"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Weight</td>
+                                <td th:text="${#numbers.formatDecimal(latestRecord.weight, 1, 2) + ' kg'}"></td>
+                                <td th:text="${weightPercentile + '%'}"></td>
+                                <td>
+                                    <span th:class="${weightStatus == 'NORMAL' ? 'badge badge-success' : (weightStatus == 'BELOW' ? 'badge badge-warning' : 'badge badge-danger')}"
+                                          th:text="${weightStatus}"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>BMI</td>
+                                <td th:text="${#numbers.formatDecimal(latestRecord.bmi, 1, 2)}"></td>
+                                <td th:text="${bmiPercentile + '%'}"></td>
+                                <td>
+                                    <span th:class="${bmiStatus == 'NORMAL' ? 'badge badge-success' : (bmiStatus == 'BELOW' ? 'badge badge-warning' : 'badge badge-danger')}"
+                                          th:text="${bmiStatus}"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
