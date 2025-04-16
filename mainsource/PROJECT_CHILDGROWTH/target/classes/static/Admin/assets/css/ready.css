@@ -13,6 +13,40 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
  */
+
+/* của tôi */
+.grid {
+        display: flex;
+        gap: 20px;
+}
+
+.link {
+    padding: 5px;
+    color: green;
+    text-decoration: none;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid;
+    display: inline-block;
+    transition: all 0.3s ease;
+    position: relative;
+    margin-bottom: 20px;;
+}
+
+/* Ẩn đoạn mô tả ban đầu */
+.link p {
+    display: none;
+    margin: 0;
+    font-size: 0.9em;
+    color: darkgreen;
+}
+
+/* Khi hover vào thì hiển thị mô tả */
+.link:hover p {
+    display: block;
+}
+
+
 /*   Background   */
 .bg-default {
   background: #607D8B !important;

@@ -24,15 +24,17 @@
         <!-- Section Title -->
 
         <h2>CÁC GÓI THÀNH VIÊN</h2>
-
+        <!-- Hiển thị thông báo lỗi hoặc thành công -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         </div><!-- End Section Title -->
 
         <div class="container" style="margin-top: 50px;">
 
-            <div class="row g-4 g-lg-0">
+            <div class="row g-4 g-lg-0" >
 
-                <div class="col-lg-4" >
-                    <div class="pricing-item">
+                <div class="col-lg-4">
+                    <div class="pricing-item" >
                         <h3>Free</h3>
                         <h4><sup>$</sup>0<span> / month</span></h4>
                         <ul>
@@ -42,13 +44,19 @@
                             <li class="na"><i class="bi bi-x"></i> <span>Xem biểu đồ tăng trưởng của trẻ</span></li>
                             <li class="na"><i class="bi bi-x"></i> <span>Cảnh báo về sức khỏe trẻ em</span></li>
                         </ul>
-                        <form action="">
-                            <div class="text-center"><a href="#" type="submit" class="buy-btn">Buy Now</a></div>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="1"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 1} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 1} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 1} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
                         </form>
                     </div>
                 </div><!-- End Pricing Item -->
 
-                <div class="col-lg-4 featured"   >
+                <div class="col-lg-4 featured" >
                     <div class="pricing-item">
                         <h2 style="color: silver;">Saving</h2>
                         <h4><sup>$</sup>29<span> / month</span></h4>
@@ -59,9 +67,16 @@
                             <li><i class="bi bi-check"></i> <span>Xem biểu đồ tăng trưởng của trẻ</span></li>
                             <li><i class="bi bi-check"></i> <span>Cảnh báo về sức khỏe trẻ em</span></li>
                         </ul>
-                        <form action="">
-                            <div class="text-center"><a href="#" type="submit" class="buy-btn">Buy Now</a></div>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="2"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 2} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 2} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 2} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
                         </form>
+
                     </div>
                 </div><!-- End Pricing Item -->
 
@@ -76,8 +91,12 @@
                             <li><i class="bi bi-check"></i> <span>Thêm nhiều chức năng mới</span></li>
                             <li><i class="bi bi-check"></i> <span>Kèm thêm ưu đãi</span></li>
                         </ul>
-                        <form action="">
-                            <div class="text-center"><a href="#" type="submit" class="buy-btn">Buy Now</a></div>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="3"/>
+                            <button style="width:139.3px; height:44px" type="button"
+                                    th:class="${currentMembershipId == 3} ? 'buy-btn bought' : 'buy-btn'"
+                                    th:text="${currentMembershipId == 3} ? 'Đã mua' : 'Buy Now'"
+                                    th:onclick="${currentMembershipId == 3} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
                         </form>
                     </div>
                 </div><!-- End Pricing Item -->
@@ -104,6 +123,11 @@
 
 
 <!-- Main JS File -->
+<script>
+    function showAlert() {
+        alert("Bạn đã mua rồi");
+    }
+</script>
 <script th:src="@{assets/js/main.js}"></script>
 </body>
 </html>

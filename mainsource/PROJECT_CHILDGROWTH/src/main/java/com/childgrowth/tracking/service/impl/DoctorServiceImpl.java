@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,13 +24,13 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<User> getAllDoctors() {
-        return userRepository.findByRole("ROLE_DOCTOR");
+        return userRepository.findByRole("DOCTOR");
     }
 
     @Override
     public User getDoctorById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
     @Override

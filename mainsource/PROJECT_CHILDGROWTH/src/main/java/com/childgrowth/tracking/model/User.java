@@ -42,6 +42,34 @@ public class User {
     @Column
     private String licenseNumber;
 
+    //thêm cột momney để kiểm soát số dư mua gói
+    @Column
+    private Long money;
+
+    //thêm cột id của các gói
+    @ManyToOne(fetch = FetchType.EAGER)
+    private MembershipPlan idMembership;
+
+
+    //getter setter
+
+
+    public void setIdMembership(MembershipPlan idMembership) {
+        this.idMembership = idMembership;
+    }
+
+    public MembershipPlan getIdMembership() {
+        return idMembership;
+    }
+
+    public void setMoney(Long money) {
+        this.money = money;
+    }
+
+    public Long getMoney() {
+        return money;
+    }
+
     // Make sure there's a return statement for getters and setters
     public String getUsername() {
         return this.username;
@@ -114,4 +142,5 @@ public class User {
     public void setLicenseNumber(String licenseNumber) {
         this.licenseNumber = licenseNumber;
     }
+
 }

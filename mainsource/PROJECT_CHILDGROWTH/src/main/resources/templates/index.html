@@ -29,32 +29,32 @@
                 <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="100">
                     <div class="icon-box">
                         <div class="icon"><i class="bi bi-easel"></i></div>
-                        <h4 class="title"><a href="">Lorem Ipsum</a></h4>
-                        <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
+                        <h4 class="title"><a th:href="@{/service}">Services</a></h4>
+                        <p class="description">Xem các dịch vụ ở đây</p>
                     </div>
                 </div><!--End Icon Box -->
 
                 <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="200">
                     <div class="icon-box">
                         <div class="icon"><i class="bi bi-gem"></i></div>
-                        <h4 class="title"><a href="">Sed ut perspiciatis</a></h4>
-                        <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
+                        <h4 class="title"><a href="/memberships">Gói Thành viên</a></h4>
+                        <p class="description">Xem các gói ở đây</p>
                     </div>
                 </div><!--End Icon Box -->
 
                 <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="300">
                     <div class="icon-box">
                         <div class="icon"><i class="bi bi-geo-alt"></i></div>
-                        <h4 class="title"><a href="">Magni Dolores</a></h4>
-                        <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
+                        <h4 class="title"><a th:href="@{/index#contact}">Địa chỉ và phản hồi</a></h4>
+                        <p class="description">Địa chỉ làm việc và phản hồi cá nhân</p>
                     </div>
                 </div><!--End Icon Box -->
 
                 <div class="col-md-6 col-lg-3" data-aos="zoom-out" data-aos-delay="400">
                     <div class="icon-box">
                         <div class="icon"><i class="bi bi-command"></i></div>
-                        <h4 class="title"><a href="">Nemo Enim</a></h4>
-                        <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
+                        <h4 class="title"><a th:href="@{/index#testimonials}">FeedBack</a></h4>
+                        <p class="description">Các FeedBack gần đây</p>
                     </div>
                 </div><!--End Icon Box -->
 
@@ -298,7 +298,7 @@
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
             <h2>Services</h2>
-            <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+            <p>Các dịch vụ bên chúng tôi</p>
         </div><!-- End Section Title -->
 
         <div class="container">
@@ -314,9 +314,9 @@
                             <i class="bi bi-activity"></i>
                         </div>
                         <a href="service-details.html" class="stretched-link">
-                            <h3>Nesciunt Mete</h3>
+                            <h3>Theo dõi phát triển</h3>
                         </a>
-                        <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+                        <p>Ghi nhận và theo dõi chiều cao, cân nặng, và các chỉ số phát triển khác của trẻ.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -329,9 +329,9 @@
                             <i class="bi bi-broadcast"></i>
                         </div>
                         <a href="service-details.html" class="stretched-link">
-                            <h3>Eosle Commodi</h3>
+                            <h3>Tư vấn chuyên gia</h3>
                         </a>
-                        <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
+                        <p>Nhận tư vấn từ các bác sĩ chuyên khoa về sự phát triển của trẻ.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -344,9 +344,9 @@
                             <i class="bi bi-easel"></i>
                         </div>
                         <a href="service-details.html" class="stretched-link">
-                            <h3>Ledo Markt</h3>
+                            <h3>Báo cáo chi tiết</h3>
                         </a>
-                        <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
+                        <p>Xem báo cáo và biểu đồ phát triển chi tiết của trẻ.</p>
                     </div>
                 </div><!-- End Service Item -->
 
@@ -536,7 +536,15 @@
                             <li class="na"><i class="bi bi-x"></i> <span>Xem biểu đồ tăng trưởng của trẻ</span></li>
                             <li class="na"><i class="bi bi-x"></i> <span>Cảnh báo về sức khỏe trẻ em</span></li>
                         </ul>
-                        <div class="text-center"><a href="#" class="buy-btn">Buy Now</a></div>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="1"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 1} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 1} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 1} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
+                        </form>
                     </div>
                 </div><!-- End Pricing Item -->
 
@@ -551,7 +559,15 @@
                             <li><i class="bi bi-check"></i> <span>Xem biểu đồ tăng trưởng của trẻ</span></li>
                             <li><i class="bi bi-check"></i> <span>Cảnh báo về sức khỏe trẻ em</span></li>
                         </ul>
-                        <div class="text-center"><a href="#" class="buy-btn">Buy Now</a></div>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="2"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 2} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 2} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 2} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
+                        </form>
                     </div>
                 </div><!-- End Pricing Item -->
 
@@ -566,7 +582,15 @@
                             <li><i class="bi bi-check"></i> <span>Thêm nhiều chức năng mới</span></li>
                             <li><i class="bi bi-check"></i> <span>Kèm thêm ưu đãi</span></li>
                         </ul>
-                        <div class="text-center"><a href="#" class="buy-btn">Buy Now</a></div>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="3"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 3} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 3} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 3} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
+                        </form>
                     </div>
                 </div><!-- End Pricing Item -->
 

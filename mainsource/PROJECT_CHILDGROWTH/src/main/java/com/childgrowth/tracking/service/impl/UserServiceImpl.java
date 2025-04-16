@@ -82,4 +82,37 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllMembers() {
         return userRepository.findByRole("MEMBER");
     }
+
+    @Override
+    public void saveDoctor(User doctor) {
+        // Mã hóa mật khẩu nếu cần
+        doctor.setEnabled(true);
+        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
+        doctor.setRole("DOCTOR");
+        userRepository.save(doctor);
+    }
+
+    @Override
+    public void saveMember(User member){
+        // Mã hóa mật khẩu nếu cần
+        member.setEnabled(true);
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setRole("MEMBER");
+        userRepository.save(member);
+    };
+    @Override
+    public User getUserById(Long id){
+        return userRepository.findById(id).orElse(null);
+    };
+
+    @Override
+    @Transactional
+    public User updateUser(Long id, User Member){
+        User existingMember = getUserById(id);
+        existingMember.setFullName(Member.getFullName());
+        existingMember.setEmail(Member.getEmail());
+        existingMember.setPhoneNumber(Member.getPhoneNumber());
+        existingMember.setIdMembership(Member.getIdMembership());
+        return userRepository.save(existingMember);
+    };
 }

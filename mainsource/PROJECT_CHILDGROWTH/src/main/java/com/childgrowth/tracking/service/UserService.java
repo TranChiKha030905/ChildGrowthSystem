@@ -23,4 +23,13 @@ public interface UserService {
     List<User> getAllUsers();
 
     void deleteUser(Long id);
+
+    void saveDoctor(User doctor);
+
+    User getUserById(Long id);
+
+    void saveMember(User member);
+
+    User updateUser(Long id, User updatedMember);
+
 }

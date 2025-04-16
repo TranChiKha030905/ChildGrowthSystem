@@ -1,77 +1,106 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Admin Dashboard - Child Growth Tracking</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
+<head th:replace="admin/fragment/head :: head"></head>
 <body>
-    <div class="container">
-        <h1>Admin Dashboard</h1>
-        
-        <div class="section">
-            <h2>Pending Doctor Approvals</h2>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Specialization</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="doctor : ${pendingDoctors}">
-                            <td th:text="${doctor.fullName}"></td>
-                            <td th:text="${doctor.email}"></td>
-                            <td th:text="${doctor.specialization}"></td>
-                            <td>
-                                <form th:action="@{/admin/doctor/{id}/approve(id=${doctor.id})}" method="post" style="display: inline;" 
-                                    <button type="submit" class="btn btn-success">Approve</button>
-                                </form>
-                                <form th:action="@{/admin/doctor/{id}/reject(id=${doctor.id})}" method="post" style="display: inline;" 
-                                    <button type="submit" class="btn btn-danger">Reject</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="wrapper">
+    <div th:replace="admin/fragment/header :: header"></div>
+    <div th:replace="admin/fragment/sidebar :: sidebar"></div>
+    <div class="main-panel">
+        <!--        chổ viết các content -->
+        <div class="content">
+            <div >
+                <h4 class="page-title">Admin Dashboard</h4>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pending Doctor Approvals</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-sub">
+                            <!--            <a th:href="@{/admin/add-Account}"><button class="btn btn-success">Thêm tài khoản</button></a>-->
+                        </div>
+                        <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
+                            <thead>
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Specialization</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="doctor : ${pendingDoctors}">
+                                <td th:text="${doctor.fullName}"></td>
+                                <td th:text="${doctor.email}"></td>
+                                <td th:text="${doctor.specialization}"></td>
+                                <td>
+                                    <form th:action="@{/admin/doctor/{id}/approve(id=${doctor.id})}" method="post" style="display: inline;" >
+                                        <button type="submit" class="btn btn-success">Approve</button>
+                                    </form>
+                                    <form th:action="@{/admin/doctor/{id}/reject(id=${doctor.id})}" method="post" style="display: inline;" >
+                                        <button type="submit" class="btn btn-danger">Reject</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Quick Links</h2>
+                    <div class="grid">
+                        <a th:href="@{/admin/doctor/manage}" class="link">
+                            <h3>Manage Doctors</h3>
+                            <p>View and manage all doctors</p>
+                        </a>
+                        <a th:href="@{/admin/member/manage}" class="link">
+                            <h3>Manage Members</h3>
+                            <p>View and manage all members</p>
+                        </a>
+                        <a th:href="@{/admin/doctor/add}" class="link">
+                            <h3>Add New Doctor</h3>
+                            <p>Register a new doctor</p>
+                        </a>
+                    </div>
+                </div>
+
+                <a th:href="@{/}" class="btn btn-primary">Back to Home</a>
+            </div>
+
+            <div>
+                <a th:href="@{/admin/members}">Danh sách người dùng</a> |
+                <a th:href="@{/admin/doctors/pending}">Phê duyệt bác sĩ</a> |
+                <a th:href="@{/admin/memberships}">Quản lý gói thành viên</a>
             </div>
         </div>
 
-        <div class="section">
-            <h2>Quick Links</h2>
-            <div class="grid">
-                <a th:href="@{/admin/doctors}" class="card">
-                    <h3>Manage Doctors</h3>
-                    <p>View and manage all doctors</p>
-                </a>
-                <a th:href="@{/admin/members}" class="card">
-                    <h3>Manage Members</h3>
-                    <p>View and manage all members</p>
-                </a>
-                <a th:href="@{/admin/doctor/add}" class="card">
-                    <h3>Add New Doctor</h3>
-                    <p>Register a new doctor</p>
-                </a>
-            </div>
-        </div>
-
-        <a href="/" class="btn btn-primary">Back to Home</a>
+        <div th:replace="admin/fragment/footer :: footer"></div>
     </div>
-
-<div>
-    <a href="/admin/members">Danh sách người dùng</a> |
-    <a href="/admin/doctors/pending">Phê duyệt bác sĩ</a> |
-    <a href="/admin/memberships">Quản lý gói thành viên</a>
 </div>
 
-
-<div class="text-end p-3">
-    <a class="btn btn-outline-secondary" href="/">🏠 Trang chủ</a>
-    <a class="btn btn-outline-info" href="/dashboard">📊 Dashboard</a>
-    <a class="btn btn-outline-danger" href="/logout">🚪 Đăng xuất</a>
+<!-- Modal -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title"><i class="la la-frown-o"></i> Under Development</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Currently, the pro version of the <b>Ready Dashboard</b> Bootstrap is in progress development</p>
+                <p>
+                    <b>We'll let you know when it's done</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>
-</html> 
+<div th:replace="admin/fragment/script :: script"></div>
+</html>
