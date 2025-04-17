@@ -173,6 +173,13 @@ public class AdminController {
             // Thiết lập enabled và lưu user
             user.setEnabled(true);
             user.setRole("MEMBER");
+            user.setMoney(0L);
+
+            MembershipPlan defaultPlan = membershipPlanRepository.findById(1L)
+                    .orElseThrow(() -> new RuntimeException("Gói mặc định không tồn tại"));
+            user.setIdMembership(defaultPlan);
+
+            user.setIdMembership(new MembershipPlan(1L));
             userService.saveMember(user);
 
             // Thêm thông báo thành công
@@ -186,7 +193,7 @@ public class AdminController {
     }
 
 
-    // Hiển thị danh sách bác sĩ
+    // Hiển thị danh sách member
     @GetMapping("/member/manage")
     public String listMembers(Model model) {
         model.addAttribute("members", userService.getAllMembers()); // Lấy tất cả bác sĩ

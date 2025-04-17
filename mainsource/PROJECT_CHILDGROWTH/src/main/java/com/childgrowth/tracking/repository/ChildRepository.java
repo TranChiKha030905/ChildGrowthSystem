@@ -15,4 +15,6 @@ public interface ChildRepository extends JpaRepository<Child, Long> {
     List<Child> findByDateOfBirthBetween(LocalDate startDate, LocalDate endDate);
     List<Child> findByParentId(Long parentId);
     List<Child> findByDoctor(User doctor);
-} 
+
+    boolean existsByNameAndParent(String name, User parent);
+}

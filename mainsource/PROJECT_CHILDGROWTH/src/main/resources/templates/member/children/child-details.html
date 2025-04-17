@@ -64,7 +64,7 @@
 
         <div class="section">
             <h2>Request Doctor Consultation</h2>
-            <form th:action="@{/member/child/{id}/request-advice(id=${child.id})}" method="post" class="form" 
+            <form th:action="@{/member/child/{id}/request-advice(id=${child.id})}" method="post" class="form">
                 <div class="form-group">
                     <label for="question">Your Question</label>
                     <textarea id="question" name="question" class="form-control" required></textarea>

@@ -1,8 +1,10 @@
 
 package com.childgrowth.tracking.service.impl;
 
+import com.childgrowth.tracking.model.MembershipPlan;
 import com.childgrowth.tracking.model.User;
 import com.childgrowth.tracking.model.DoctorApproval;
+import com.childgrowth.tracking.repository.MembershipPlanRepository;
 import com.childgrowth.tracking.repository.UserRepository;
 import com.childgrowth.tracking.repository.DoctorApprovalRepository;
 import com.childgrowth.tracking.service.UserService;
@@ -13,14 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+
     private final UserRepository userRepository;
     private final DoctorApprovalRepository doctorApprovalRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final MembershipPlanRepository membershipPlanRepository;
 
     @Override
     @Transactional
@@ -115,4 +121,44 @@ public class UserServiceImpl implements UserService {
         existingMember.setIdMembership(Member.getIdMembership());
         return userRepository.save(existingMember);
     };
+
+
+    @Override
+    public String purchasePlan(User user, Long planId) {
+        Optional<MembershipPlan> optionalPlan = membershipPlanRepository.findById(planId);
+
+        if (optionalPlan.isEmpty()) {
+            return "Gói không tồn tại";
+        }
+
+        MembershipPlan plan = optionalPlan.get();
+
+        if (user.getIdMembership() != null && user.getIdMembership().getId().equals(planId)) {
+            return "Bạn đã mua gói này rồi.";
+        }
+
+        if (plan.getPrice() > 0 && (user.getMoney() == null || user.getMoney() < plan.getPrice())) {
+            return "Số dư không đủ";
+        }
+
+        // Trừ tiền nếu có phí
+        if (plan.getPrice() > 0) {
+            user.setMoney(user.getMoney() - plan.getPrice());
+        }
+
+        // Gán gói mới
+        user.setIdMembership(plan);
+        userRepository.save(user);
+
+        return "success";
+    }
+
+    public boolean matchesPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
+    }
+
 }

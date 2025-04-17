@@ -3,6 +3,8 @@ package com.childgrowth.tracking.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -51,8 +53,31 @@ public class User {
     private MembershipPlan idMembership;
 
 
+    //cột token để đổi mk
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private LocalDateTime resetTokenExpiry;
+
+    // Getter & Setter
+    public String getResetToken() {
+        return resetToken;
+    }
     //getter setter
 
+
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
 
     public void setIdMembership(MembershipPlan idMembership) {
         this.idMembership = idMembership;

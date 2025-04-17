@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="member/fragment/head :: head"></head>
 <body>
@@ -6,6 +6,7 @@
     <div th:replace="member/fragment/header :: header"></div>
     <div th:replace="member/fragment/sidebar :: sidebar"></div>
     <div class="main-panel">
+        <!--        chổ viết các content -->
         <div class="content">
             <h3>Member Dashboard</h3>
 
@@ -14,10 +15,8 @@
                     <div class="card-title">My children</div>
                 </div>
                 <div class="card-body">
-                    <div class="card-sub mb-3">
-                        <a th:href="@{/member/add-child}">
-                            <button class="btn btn-success">Thêm tài khoản</button>
-                        </a>
+                    <div class="card-sub">
+                        <a th:href="@{/member/add-child}"><button class="btn btn-success">Thêm tài khoản</button></a>
                     </div>
                     <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
                         <thead>
@@ -53,39 +52,9 @@
                     </table>
                 </div>
             </div>
-
-            <div class="section mt-5">
-                <h2>Quick Actions</h2>
-                <div class="grid">
-                    <a th:href="@{/member/child/add}" class="card">
-                        <h3>Add Child</h3>
-                        <p>Register a new child</p>
-                    </a>
-                    <a th:href="@{/member/advice-requests}" class="card">
-                        <h3>Advice Requests</h3>
-                        <p>View and manage doctor consultations</p>
-                    </a>
-                    <a th:href="@{/member/reports}" class="card">
-                        <h3>Reports</h3>
-                        <p>View growth reports and analytics</p>
-                    </a>
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <a href="/member/children">Xem danh sách bé</a> |
-                <a href="/growth-records">Báo cáo tăng trưởng</a> |
-                <a href="/member/advice-requests">Yêu cầu tư vấn</a> |
-                <a href="/feedback">Góp ý</a>
-            </div>
-
-            <div class="text-end p-3">
-                <a class="btn btn-outline-secondary" href="/">🏠 Trang chủ</a>
-                <a class="btn btn-outline-danger" href="/logout">🚪 Đăng xuất</a>
-            </div>
-
-        </div>
     </div>
+
+</div>
 </div>
 
 <!-- Modal -->
@@ -100,7 +69,8 @@
             </div>
             <div class="modal-body text-center">
                 <p>Currently, the pro version of the <b>Ready Dashboard</b> Bootstrap is in progress development</p>
-                <p><b>We'll let you know when it's done</b></p>
+                <p>
+                    <b>We'll let you know when it's done</b></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -108,7 +78,6 @@
         </div>
     </div>
 </div>
-
-<div th:replace="member/fragment/script :: script"></div>
 </body>
+<div th:replace="member/fragment/script :: script"></div>
 </html>

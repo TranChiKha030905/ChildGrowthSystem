@@ -8,50 +8,49 @@
     <div class="main-panel">
         <!--        chổ viết các content -->
         <div class="content">
-            <h2>Chỉnh sửa DOCTOR</h2>
-            <a class="btn btn-primary" th:href="@{/admin/doctor/manage}">Quay lại trang chủ</a>
-            <form th:action="@{'/admin/doctor/' + ${doctor.id} + '/edit'}" th:object="${doctor}" method="post">
+            <h2>Thêm Member Mới</h2>
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}"></span><br>
+                <a th:href="@{/member/upgrade}" class="btn btn-sm btn-warning mt-2">Nâng cấp gói</a>
+            </div>
+            <a class="btn btn-primary" th:href="@{/member/manage}">Quay lại trang chủ</a>
+            <form th:action="@{/member/add-child}" method="post" th:object="${children}" >
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Form Control Styles</div>
+                        <div class="card-title">Thêm thông tin</div>
                     </div>
                     <div class="card-body">
-
-
                         <div class="form-group">
-                            <label >FULL NAME</label>
-                            <input type="text" class="form-control input-square" placeholder="Fullname" id="fullName" th:field="*{fullName}" required>
+                            <label >Họ và Tên trẻ:</label>
+                            <input type="text" class="form-control input-square" placeholder="tên" id="name" name="name" th:field="*{name}" required>
+                            <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+                        <div class="form-group">
+                            <label >Ngày sinh:</label>
+                            <input type="date" id="birth_date" name="birth_date" class="form-control input-square" placeholder="Fullname"  th:field="*{dateOfBirth}" required>
                         </div>
 
                         <div class="form-group">
-                            <label >EMAIL</label>
-                            <input type="email" class="form-control input-square" placeholder="Email" id="email" th:field="*{email}" required>
+                            <label >Giới tính:</label>
+                            <select class="form-control input-pill" id="pillSelect"  name="gender" th:field="*{gender}">
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label >Phone Number</label>
-                            <input type="text" class="form-control input-square" placeholder=phonenumber id="phone" th:field="*{phoneNumber}" required>
+                            <label>Ngày khám gần nhất:</label>
+                            <input type="date" class="form-control input-square" th:field="*{lastCheckup}" placeholder="Chọn ngày">
                         </div>
-
-                        <div class="form-group">
-                            <label >specialization</label>
-                            <input type="text" class="form-control input-square" placeholder=specialization id="specialization" th:field="*{specialization}" required>
+                        <div class="card-action">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="reset" class="btn btn-danger">Reset</button>
                         </div>
-
-                        <div class="form-group">
-                            <label >licenseNumber</label>
-                            <input type="text" class="form-control input-square" placeholder=licenseNumber id="licenseNumber" th:field="*{licenseNumber}" required>
-                        </div>
-
-                    </div>
-                    <div class="card-action">
-                        <button type="submit" class="btn btn-success">Save</button>
-                        <a class="btn btn-primary" th:href="@{/admin/doctor/manage}">Quay lại trang chủ</a>
                     </div>
                 </div>
             </form>
 
         </div>
-        <div th:replace="admin/fragment/footer :: footer"></div>
+
     </div>
 </div>
 

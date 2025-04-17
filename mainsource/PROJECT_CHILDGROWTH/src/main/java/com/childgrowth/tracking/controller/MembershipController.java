@@ -34,81 +34,97 @@ public class MembershipController {
     @Autowired
     private UserService userService;
 
+// -------------------------------------------Function-----------------------------------------------------
+    //kiểm tra người dùng đăng nhập chưa
+
+    //Lấy thông tin người dùng từ Spring Security (Authentication)
+    //Kiểm tra xem principal có phải là UserDetails không
+    //Chuyển đổi principal thành UserDetails:
+    //Lấy thông tin người dùng từ cơ sở dữ liệu:
+    //Lấy ID của gói thành viên (nếu có):
+    //Nếu không tìm thấy người dùng hoặc có lỗi, trả về null:
+    //Lưu currentMembershipId vào model:
+    //Ghi log thông tin của currentMembershipId:
+
+    private Optional<User> getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof UserDetails userDetails) {
+            return userRepository.findByUsername(userDetails.getUsername());
+        }
+        return Optional.empty();
+    }
+
+
+    //kiểm tra gói và số dư
+    public String purchasePlan(User user, Long planId) {
+        Optional<MembershipPlan> optionalPlan = membershipPlanRepository.findById(planId);
+        if (optionalPlan.isEmpty()) return "Gói không tồn tại";
+
+        MembershipPlan plan = optionalPlan.get();
+
+        if (user.getIdMembership() != null && user.getIdMembership().getId().equals(planId)) {
+            return "Bạn đã mua gói này rồi.";
+        }
+
+        if (plan.getPrice() > 0 && (user.getMoney() == null || user.getMoney() < plan.getPrice())) {
+            return "Số dư không đủ";
+        }
+
+        user.setIdMembership(plan);
+        if (plan.getPrice() > 0) {
+            user.setMoney(user.getMoney() - plan.getPrice());
+        }
+
+        userService.saveMember(user); // hoặc userRepository.save(user)
+        return "success";
+    }
+
+//    -----------------------------------------------------------------------------------------------
+
+    //chức năng mua gói
     @GetMapping("/memberships")
     public String showMemberships(Model model) {
-
-        //Lấy thông tin người dùng từ Spring Security (Authentication)
-        //Kiểm tra xem principal có phải là UserDetails không
-        //Chuyển đổi principal thành UserDetails:
-        //Lấy thông tin người dùng từ cơ sở dữ liệu:
-        //Lấy ID của gói thành viên (nếu có):
-        //Nếu không tìm thấy người dùng hoặc có lỗi, trả về null:
-//        Lưu currentMembershipId vào model:
-        //Ghi log thông tin của currentMembershipId:
         try {
-            Long currentMembershipId = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                    .filter(principal -> principal instanceof UserDetails)
-                    .map(principal -> (UserDetails) principal)
-                    .flatMap(userDetails -> {
-                        logger.debug("Fetching user by username: {}", userDetails.getUsername());
-                        return userRepository.findByUsername(userDetails.getUsername());
-                    })
-                    .map(user -> user.getIdMembership() != null ? user.getIdMembership().getId() : null)
-                    .orElse(null);
+            Optional<User> optionalUser = getCurrentUser();
 
-            logger.info("Current membership ID: {}", currentMembershipId);
-            model.addAttribute("currentMembershipId", currentMembershipId);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                Long currentMembershipId = (user.getIdMembership() != null) ? user.getIdMembership().getId() : null;
+                model.addAttribute("currentMembershipId", currentMembershipId);
+                logger.info("Current membership ID: {}", currentMembershipId);
+            } else {
+                logger.warn("User not authenticated when accessing memberships page.");
+            }
+
         } catch (Exception e) {
             logger.error("Error rendering memberships page", e);
             model.addAttribute("error", "Đã xảy ra lỗi khi tải trang gói thành viên.");
         }
+
         return "memberships";
     }
 
+
+
     @PostMapping("/purchase-membership")
     public String purchaseMembership(@RequestParam("planId") Long planId, RedirectAttributes redirectAttributes) {
+        Optional<User> optionalUser = getCurrentUser();
 
-        // Nếu user đã mua gói này rồi thì không xử lý nữa
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Nếu không tìm thấy user (chưa đăng nhập) thì chuyển hướng login
+        if (optionalUser.isEmpty()) {
+            return "redirect:/login";
+        }
 
-        // Kiểm tra nếu người dùng chưa đăng nhập
-        if (authentication == null || !authentication.isAuthenticated() ||
-                authentication.getPrincipal() == null ||
-                authentication.getPrincipal() instanceof String && "anonymousUser".equals(authentication.getPrincipal())) {
-            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập
+        User user = optionalUser.get();
+        String result = userService.purchasePlan(user, planId);
+
+        if ("success".equals(result)) {
+            redirectAttributes.addFlashAttribute("success", "Mua gói thành công");
+        } else {
+            redirectAttributes.addFlashAttribute("error", result);
         }
-        try {
-            Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                    .filter(principal -> principal instanceof UserDetails)
-                    .map(principal -> (UserDetails) principal)
-                    .flatMap(userDetails -> {
-                        logger.debug("Fetching user by username: {}", userDetails.getUsername());
-                        return userRepository.findByUsername(userDetails.getUsername());
-                    })
-                    .ifPresent(user -> {
-                        logger.debug("Processing purchase for planId: {}", planId);
-                        MembershipPlan plan = membershipPlanRepository.findById(planId).orElse(null);
-                        if (plan == null) {
-                            redirectAttributes.addFlashAttribute("error", "Gói không tồn tại");
-                        }
-                        else if (user.getIdMembership() != null && user.getIdMembership().getId().equals(planId)) { // Kiểm tra xem gói đã mua chưa
-                            redirectAttributes.addFlashAttribute("error", "Bạn đã mua gói này rồi.");
-                        }
-                        else if (plan.getPrice() > 0 && (user.getMoney() == null || user.getMoney() < plan.getPrice())) {
-                            redirectAttributes.addFlashAttribute("error", "Số dư không đủ");
-                        } else {
-                            user.setIdMembership(plan);
-                            if (plan.getPrice() > 0) {
-                                user.setMoney(user.getMoney() - plan.getPrice());
-                            }
-                            userService.saveMember(user);
-                            redirectAttributes.addFlashAttribute("success", "Mua gói thành công");
-                        }
-                    });
-        } catch (Exception e) {
-            logger.error("Error processing purchase for planId: {}", planId, e);
-            redirectAttributes.addFlashAttribute("error", "Đã xảy ra lỗi khi mua gói.");
-        }
+
         return "redirect:/memberships";
     }
+
 }

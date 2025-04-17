@@ -3,6 +3,7 @@ package com.childgrowth.tracking.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,14 @@ public class Child {
     private String name;
     private LocalDate dateOfBirth;
     private String gender;
-    
+    private LocalDate lastCheckup;
+
+    @Transient // Đánh dấu đây là trường không lưu trong DB
+    public int getAge() {
+        if (dateOfBirth == null) return 0;
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
+
     @ManyToOne
     private User parent;
 

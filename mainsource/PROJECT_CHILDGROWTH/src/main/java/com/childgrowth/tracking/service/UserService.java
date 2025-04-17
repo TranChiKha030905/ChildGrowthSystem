@@ -32,4 +32,9 @@ public interface UserService {
 
     User updateUser(Long id, User updatedMember);
 
+    String purchasePlan(User user, Long planId);
+
+    String encodePassword(String password);
+
+    boolean matchesPassword(String currentPassword, String password);
 }
