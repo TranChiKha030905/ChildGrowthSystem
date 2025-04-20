@@ -10,6 +10,7 @@ public interface FeedbackService {
     Feedback getFeedbackById(Long id);
     List<Feedback> getAllFeedback();
     List<Feedback> getFeedbackByUser(User user);
+    List<Feedback> getAllPublicFeedback() ;
     List<Feedback> getFeedbackByType(String type);
     List<Feedback> getFeedbackByStatus(String status);
     List<Feedback> getFeedbackByPriority(String priority);
@@ -20,4 +21,6 @@ public interface FeedbackService {
     void markFeedbackAsResolved(Long id);
     void addResponse(Long id, String response, User responder);
     double calculateAverageRating();
-} 
+
+    void saveFeedback(Feedback feedback);
+}

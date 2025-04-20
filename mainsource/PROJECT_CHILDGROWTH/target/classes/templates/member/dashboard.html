@@ -8,7 +8,9 @@
     <div class="main-panel">
         <div class="content">
             <h3>Member Dashboard</h3>
-
+            <div class="text-end p-3">
+                <a class="btn btn-outline-secondary" href="/">🏠 Trang chủ</a>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">My children</div>
@@ -57,17 +59,13 @@
             <div class="section mt-5">
                 <h2>Quick Actions</h2>
                 <div class="grid">
-                    <a th:href="@{/member/child/add}" class="card">
+                    <a th:href="@{/member/add-child}" class="card">
                         <h3>Add Child</h3>
                         <p>Register a new child</p>
                     </a>
-                    <a th:href="@{/member/advice-requests}" class="card">
+                    <a th:href="@{/member/child/request-advice}" class="card">
                         <h3>Advice Requests</h3>
                         <p>View and manage doctor consultations</p>
-                    </a>
-                    <a th:href="@{/member/reports}" class="card">
-                        <h3>Reports</h3>
-                        <p>View growth reports and analytics</p>
                     </a>
                 </div>
             </div>
@@ -79,10 +77,7 @@
                 <a href="/feedback">Góp ý</a>
             </div>
 
-            <div class="text-end p-3">
-                <a class="btn btn-outline-secondary" href="/">🏠 Trang chủ</a>
-                <a class="btn btn-outline-danger" href="/logout">🚪 Đăng xuất</a>
-            </div>
+
 
         </div>
     </div>

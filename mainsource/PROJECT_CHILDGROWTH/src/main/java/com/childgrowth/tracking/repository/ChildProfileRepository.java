@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ChildProfileRepository extends JpaRepository<ChildProfile, Long> {
     List<ChildProfile> findByUserId(Long userId);
+
 }

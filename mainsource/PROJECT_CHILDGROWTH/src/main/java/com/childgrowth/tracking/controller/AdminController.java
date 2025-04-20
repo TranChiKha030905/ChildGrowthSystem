@@ -236,4 +236,13 @@ public class AdminController {
         return "redirect:/admin/member/manage";
     }
 
+    //------------------------------------------------------------------
+    //xem profile của người đó (member,doctor)
+    @GetMapping("/{username}")
+    public String viewUser(@PathVariable String username, Model model) {
+        User user = userService.getUserByUsername(username);
+        model.addAttribute("user", user);
+        return "user/profile";
+    }
+
 }

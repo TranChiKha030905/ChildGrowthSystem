@@ -27,7 +27,12 @@
 <!--        --------------------------------------------->
         <li><a th:href="@{/service}">Services</a></li>
         <li><a th:href="@{/memberships}">Gói Thành Viên</a></li>
-        <li><a th:href="@{/feedback}">FeedBack</a></li>
+        <li class="nav_dashboard" sec:authorize="!isAuthenticated()">
+          <a th:href="@{/feedback}">FeedBack</a>
+        </li>
+        <li class="nav_dashboard" sec:authorize="isAuthenticated()">
+          <a th:href="@{/member/feedback}">FeedBack</a>
+        </li>
         <li class="dropdown"><a href="#"><span>Blog & FAQ</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
           <ul>
             <li><a th:href="@{/index#blog}">Blog</a></li>

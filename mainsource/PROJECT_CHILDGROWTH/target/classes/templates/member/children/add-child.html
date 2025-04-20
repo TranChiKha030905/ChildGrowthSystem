@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="admin/fragment/head :: head"></head>
+<head th:replace="member/fragment/head :: head"></head>
 <body>
 <div class="wrapper">
-    <div th:replace="admin/fragment/header :: header"></div>
-    <div th:replace="admin/fragment/sidebar :: sidebar"></div>
+    <div th:replace="member/fragment/header :: header"></div>
+    <div th:replace="member/fragment/sidebar :: sidebar"></div>
     <div class="main-panel">
         <!--        chổ viết các content -->
         <div class="content">
-            <h2>Thêm Member Mới</h2>
+            <h2>Thêm Trẻ Mới</h2>
             <div th:if="${error}" class="alert alert-danger" role="alert">
                 <span th:text="${error}"></span><br>
                 <a th:href="@{/member/upgrade}" class="btn btn-sm btn-warning mt-2">Nâng cấp gói</a>
@@ -76,5 +76,5 @@
     </div>
 </div>
 </body>
-<div th:replace="admin/fragment/script :: script"></div>
+<div th:replace="member/fragment/script :: script"></div>
 </html>

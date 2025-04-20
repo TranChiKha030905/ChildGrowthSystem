@@ -1,12 +1,17 @@
 
 package com.childgrowth.tracking.controller;
 
+import com.childgrowth.tracking.model.Child;
 import com.childgrowth.tracking.model.MembershipPlan;
 import com.childgrowth.tracking.model.User;
+import com.childgrowth.tracking.repository.ChildProfileRepository;
+import com.childgrowth.tracking.repository.ChildRepository;
 import com.childgrowth.tracking.repository.MembershipPlanRepository;
 import com.childgrowth.tracking.repository.UserRepository;
+import com.childgrowth.tracking.service.ChildService;
 import com.childgrowth.tracking.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -23,6 +30,7 @@ public class AuthController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final MembershipPlanRepository membershipPlanRepository;
+
 
     @GetMapping("/login")
     public String showLoginPage() {
@@ -104,11 +112,17 @@ private final PasswordEncoder passwordEncoder; // inject qua constructor
     }
 
     @PostMapping("/forgot-password")
-    public String handleForgotPassword(@RequestParam("email") String email, Model model) {
-        User user = userRepository.findByEmail(email).orElse(null);
+    public String handleForgotPassword(@RequestParam("username") String username,
+                                       @RequestParam("email") String email,
+                                       Model model) {
+        // Tìm user theo username
+        User user = userService.getUserByUsername(username);
 
-        if (user == null) {
-            model.addAttribute("message", "Không tìm thấy người dùng với email này.");
+
+        // Kiểm tra user có tồn tại và email có khớp không
+        if (user == null || !user.getEmail().equals(email)) {
+            model.addAttribute("message", "Username hoặc Email không đúng hoặc không khớp.");
+            return "forgot-password";
         } else {
             // Tạo mật khẩu tạm thời
             String tempPassword = generateTempPassword();
@@ -140,10 +154,15 @@ private final PasswordEncoder passwordEncoder; // inject qua constructor
     public String handleResetPassword(@RequestParam("email") String email,
                                       @RequestParam("currentPassword") String currentPassword,
                                       @RequestParam("newPassword") String newPassword,
-                                      RedirectAttributes redirectAttributes) {
+                                      RedirectAttributes redirectAttributes,
+                                      Principal principal) {
 
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) {
+        // Lấy username của người đang đăng nhập
+        String username = principal.getName();
+
+        //Lấy ussr thông qua username đã đăng nhập
+        User user = userService.getUserByUsername(username);
+        if (!user.getEmail().equals(email)) {
             redirectAttributes.addFlashAttribute("message", "Email không tồn tại.");
             return "redirect:/reset-password";
         }
@@ -161,6 +180,7 @@ private final PasswordEncoder passwordEncoder; // inject qua constructor
         redirectAttributes.addFlashAttribute("message", "Cập nhật mật khẩu thành công.");
         return "redirect:/login";
     }
+
 
 
 }

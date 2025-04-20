@@ -16,4 +16,7 @@ public interface GrowthRecordRepository extends JpaRepository<GrowthRecord, Long
     List<GrowthRecord> findByChildAndIsVerified(Child child, boolean isVerified);
     GrowthRecord findTopByChildOrderByMeasurementDateDesc(Child child);
     List<GrowthRecord> findByChildIdOrderByMeasurementDateAsc(Long childId);
+
+    // Tìm các bản ghi theo Child và sắp xếp theo measurementDate
+    List<GrowthRecord> findByChildOrderByMeasurementDateAsc(Child child);
 }

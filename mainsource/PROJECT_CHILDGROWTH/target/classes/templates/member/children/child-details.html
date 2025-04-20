@@ -1,44 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Child Details - Child Growth Tracking</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
+<head th:replace="member/fragment/head :: head"></head>
 <body>
-    <div class="container">
-        <h1>Child Details</h1>
-        
-        <div class="actions">
-            <a th:href="@{/member/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
-        </div>
+<div class="wrapper">
+    <div th:replace="member/fragment/header :: header"></div>
+    <div th:replace="member/fragment/sidebar :: sidebar"></div>
+    <div class="main-panel">
+        <!--        chổ viết các content -->
+        <div class="content">
+            <h1>Child Details</h1>
 
-        <div class="section">
-            <h2>Child Information</h2>
-            <div class="info-card">
-                <div class="info-row">
-                    <span class="label">Name:</span>
-                    <span class="value" th:text="${child.name}"></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Date of Birth:</span>
-                    <span class="value" th:text="${#temporals.format(child.dateOfBirth, 'dd/MM/yyyy')}"></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Gender:</span>
-                    <span class="value" th:text="${child.gender}"></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Assigned Doctor:</span>
-                    <span class="value" th:text="${child.doctor?.fullName ?: 'Not assigned'}"></span>
+            <div class="actions">
+                <a th:href="@{/member/manage}" class="btn btn-secondary">← Quay lại danh sách</a>
+                <a th:href="@{/member/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+
+            <div class="card">
+                <h2>Child Information</h2>
+                <div class="info-card">
+                    <div class="info-row">
+                        <span class="label">Name:</span>
+                        <span class="value" th:text="${child.name}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Date of Birth:</span>
+                        <span th:if="${child.dateOfBirth != null}" th:text="${#temporals.format(child.dateOfBirth, 'dd/MM/yyyy')}"></span>
+                        <span th:if="${child.dateOfBirth == null}">N/A</span>
+
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Gender:</span>
+                        <span class="value" th:text="${child.gender}"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Assigned Doctor:</span>
+                        <span class="value" th:text="${child.doctor?.fullName ?: 'Not assigned'}"></span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="section">
-            <h2>Growth Records</h2>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
+            <div class="card">
+                <h2>Growth Records</h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
                         <tr>
                             <th>Date</th>
                             <th>Weight (kg)</th>
@@ -47,8 +52,8 @@
                             <th>BMI</th>
                             <th>Notes</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         <tr th:each="record : ${growthRecords}">
                             <td th:text="${#temporals.format(record.measurementDate, 'dd/MM/yyyy')}"></td>
                             <td th:text="${#numbers.formatDecimal(record.weight, 1, 2)}"></td>
@@ -57,24 +62,54 @@
                             <td th:text="${#numbers.formatDecimal(record.bmi, 1, 2)}"></td>
                             <td th:text="${record.notes}"></td>
                         </tr>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section">
+
+                <h2>Yêu cầu tư vấn bác sĩ</h2>
+                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                <div th:if="${error}" class="alert alert-danger" role="alert">
+                    <span th:text="${error}"></span><br>
+                    <a th:href="@{/member/upgrade}" class="btn btn-sm btn-warning mt-2">Nâng cấp gói</a>
+                </div>
+                <form th:action="@{/member/child/{id}/request-advice(id=${child.id})}" method="post" class="form">
+                    <div class="form-group">
+                        <label for="question">Your Question</label>
+                        <textarea id="question" name="question" class="form-control" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Send Request</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="section">
-            <h2>Request Doctor Consultation</h2>
-            <form th:action="@{/member/child/{id}/request-advice(id=${child.id})}" method="post" class="form">
-                <div class="form-group">
-                    <label for="question">Your Question</label>
-                    <textarea id="question" name="question" class="form-control" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Send Request</button>
-                </div>
-            </form>
+<!-- Modal -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title"><i class="la la-frown-o"></i> Under Development</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Currently, the pro version of the <b>Ready Dashboard</b> Bootstrap is in progress development</p>
+                <p>
+                    <b>We'll let you know when it's done</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
+</div>
 </body>
-</html> 
+<div th:replace="member/fragment/script :: script"></div>
+</html>

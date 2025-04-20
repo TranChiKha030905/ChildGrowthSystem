@@ -16,4 +16,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<Feedback> findByIsPublic(boolean isPublic);
     List<Feedback> findByOverallRatingGreaterThanEqual(Integer rating);
-} 
+    List<Feedback> findByUserOrderByCreatedAtDesc(User user);
+    List<Feedback> findByIsPublicTrueOrderByCreatedAtDesc();
+
+}

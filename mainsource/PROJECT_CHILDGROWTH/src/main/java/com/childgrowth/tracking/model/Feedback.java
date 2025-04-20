@@ -1,6 +1,9 @@
 package com.childgrowth.tracking.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,6 +29,7 @@ public class Feedback {
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    @NotBlank(message = "Nội dung không được để trống")
     private String content;
 
     @Column(nullable = false)
@@ -38,6 +42,7 @@ public class Feedback {
     private String priority;
 
     @Column(name = "overall_rating")
+    @Min(1) @Max(5)
     private Integer overallRating;
 
     @Column(columnDefinition = "TEXT")

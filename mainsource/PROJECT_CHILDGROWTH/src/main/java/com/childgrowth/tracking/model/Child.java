@@ -24,6 +24,7 @@ public class Child {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 
+
     @ManyToOne
     private User parent;
 
@@ -51,4 +52,7 @@ public class Child {
     private String notes;
     private String profilePicture;
     private boolean isActive = true;
+
+    @OneToOne(mappedBy = "child", cascade = CascadeType.ALL)
+    private ChildProfile childProfile; // Quan hệ One-to-One với ChildProfile
 } 

@@ -1,4 +1,3 @@
-
 CREATE DATABASE IF NOT EXISTS child_growth_db;
 USE child_growth_db;
 

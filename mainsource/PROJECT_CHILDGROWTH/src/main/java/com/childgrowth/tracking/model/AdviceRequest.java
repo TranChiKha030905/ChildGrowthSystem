@@ -16,11 +16,11 @@ public class AdviceRequest {
     private Long id;
 
     private String message;
-    private String response;
+    private String response;        //bác sĩ sẽ phản hồi vào đây
     private LocalDate createdAt;
-    private boolean resolved;
+    private boolean resolved;       //nếu bác sĩ phản hồi thì sẽ hiện true
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_id")
-    private Child child;
+    private ChildProfile child;
 }

@@ -8,11 +8,17 @@
     <div class="main-panel">
         <!--        chổ viết các content -->
         <div class="content">
-            <h3>Member Dashboard</h3>
+            <h3>Children manage</h3>
 
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">My children</div>
+                    <div th:if="${message}" class="alert alert-success" role="alert">
+                        <p th:text="${message}"></p>
+                    </div>
+                    <div th:if="${error}" class="alert alert-danger" role="alert">
+                        <p th:text="${error}"></p>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="card-sub">
@@ -44,8 +50,15 @@
                                 <span th:if="${child.lastCheckup != null and #lists.contains(needCheckup, child)}"
                                       style="color: red; font-weight: bold;">⚠ Đã lâu chưa khám!</span>
                             </td>
-                            <td>
-                                <a th:href="@{/member/child/{id}(id=${child.id})}" class="btn btn-primary">View Details</a>
+                            <td style="display: flex;
+                                        gap: 20px;">
+                                <a style="height: 39px;" th:href="@{/member/child/{id}(id=${child.id})}" class="btn btn-default">View Details</a>
+                                <!-- Form tạo hồ sơ tự động cho trẻ -->
+                                <form th:action="@{/createChildProfile}" method="post">
+                                    <input type="hidden" th:value="${child.id}" name="childId"/>
+                                    <button type="submit" class="btn btn-primary">Tạo Hồ Sơ Trẻ</button>
+                                </form>
+                                <a style="height: 39px;" th:href="@{|/member/child/${child.id}/records|}" class="btn btn-default">View Growth Record</a>
                             </td>
                         </tr>
                         </tbody>

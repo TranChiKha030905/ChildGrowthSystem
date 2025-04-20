@@ -19,6 +19,13 @@ public class GrowthRecordServiceImpl implements GrowthRecordService {
 
     @Override
     public GrowthRecord saveGrowthRecord(GrowthRecord record) {
+        // Tính BMI đơn giản
+        if (record.getHeight() != null && record.getWeight() != null) {
+            double heightInMeters = record.getHeight() / 100;
+            double bmi = record.getWeight() / (heightInMeters * heightInMeters);
+            record.setBmi(Math.round(bmi * 10) / 10.0); // Làm tròn 1 số thập phân
+        }
+
         return growthRecordRepository.save(record);
     }
 
@@ -30,7 +37,7 @@ public class GrowthRecordServiceImpl implements GrowthRecordService {
 
     @Override
     public List<GrowthRecord> getGrowthRecordsByChild(Child child) {
-        return growthRecordRepository.findByChild(child);
+        return growthRecordRepository.findByChildOrderByMeasurementDateAsc(child);
     }
 
     @Override

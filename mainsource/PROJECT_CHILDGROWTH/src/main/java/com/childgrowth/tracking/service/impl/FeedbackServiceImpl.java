@@ -43,11 +43,15 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    public List<Feedback> getAllPublicFeedback() {
+        return feedbackRepository.findByIsPublicTrueOrderByCreatedAtDesc(); // Chỉ lấy feedback public
+    }
+    @Override
     public List<Feedback> getFeedbackByUser(User user) {
         if (user == null) {
             throw new IllegalArgumentException("Người dùng không được để trống");
         }
-        return feedbackRepository.findByUser(user);
+        return feedbackRepository.findByUserOrderByCreatedAtDesc(user);
     }
 
     @Override
@@ -169,5 +173,10 @@ public class FeedbackServiceImpl implements FeedbackService {
         if (!StringUtils.hasText(feedback.getType())) {
             throw new IllegalArgumentException("Loại phản hồi không được để trống");
         }
+    }
+    @Transactional
+    public void saveFeedback(Feedback feedback) {
+        // Có thể thêm logic xử lý ở đây nếu cần
+        feedbackRepository.save(feedback);
     }
 } 
