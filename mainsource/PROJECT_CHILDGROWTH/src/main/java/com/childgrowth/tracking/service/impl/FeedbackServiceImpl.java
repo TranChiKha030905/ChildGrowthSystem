@@ -1,17 +1,21 @@
 package com.childgrowth.tracking.service.impl;
 
+
 import com.childgrowth.tracking.exception.FeedbackNotFoundException;
 import com.childgrowth.tracking.model.Feedback;
 import com.childgrowth.tracking.model.User;
 import com.childgrowth.tracking.repository.FeedbackRepository;
 import com.childgrowth.tracking.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FeedbackServiceImpl implements FeedbackService {
@@ -178,5 +182,63 @@ public class FeedbackServiceImpl implements FeedbackService {
     public void saveFeedback(Feedback feedback) {
         // Có thể thêm logic xử lý ở đây nếu cần
         feedbackRepository.save(feedback);
+    }
+
+    public FeedbackServiceImpl(FeedbackRepository feedbackRepository) {
+        this.feedbackRepository = feedbackRepository;
+    }
+
+    @Override
+    public Page<Feedback> findAll(Pageable pageable) {
+        return feedbackRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Feedback> findByStatus(String status, Pageable pageable) {
+        return feedbackRepository.findByStatus(status, pageable);
+    }
+
+    @Override
+    public Page<Feedback> findByType(String type, Pageable pageable) {
+        return feedbackRepository.findByType(type, pageable);
+    }
+
+    @Override
+    public Page<Feedback> findByStatusAndType(String status, String type, Pageable pageable) {
+        return feedbackRepository.findByStatusAndType(status, type, pageable);
+    }
+
+    @Override
+    public Optional<Feedback> findById(Long id) {
+        return feedbackRepository.findById(id);
+    }
+
+    @Override
+    public void respondToFeedback(Long id, String response, String newStatus, User respondedBy) {
+        feedbackRepository.findById(id).ifPresent(feedback -> {
+            feedback.setResponse(response);
+            feedback.setStatus(newStatus);
+            feedback.setRespondedBy(respondedBy);
+            feedback.setRespondedAt(LocalDateTime.now());
+
+            if ("RESOLVED".equals(newStatus)) {
+                feedback.setResolvedAt(LocalDateTime.now());
+            }
+
+            feedbackRepository.save(feedback);
+        });
+    }
+
+    @Override
+    public void updateFeedbackStatus(Long id, String status, User updatedBy) {
+        feedbackRepository.findById(id).ifPresent(feedback -> {
+            feedback.setStatus(status);
+
+            if ("RESOLVED".equals(status)) {
+                feedback.setResolvedAt(LocalDateTime.now());
+            }
+
+            feedbackRepository.save(feedback);
+        });
     }
 } 

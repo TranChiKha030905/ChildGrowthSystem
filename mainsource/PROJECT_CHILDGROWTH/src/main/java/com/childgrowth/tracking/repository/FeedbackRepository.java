@@ -1,9 +1,12 @@
 package com.childgrowth.tracking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.childgrowth.tracking.model.Feedback;
 import com.childgrowth.tracking.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,4 +22,9 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     List<Feedback> findByUserOrderByCreatedAtDesc(User user);
     List<Feedback> findByIsPublicTrueOrderByCreatedAtDesc();
 
+
+    Page<Feedback> findByStatus(String status, Pageable pageable);
+    Page<Feedback> findByType(String type, Pageable pageable);
+    Page<Feedback> findByStatusAndType(String status, String type, Pageable pageable);
+    Page<Feedback> findAll(Pageable pageable);
 }

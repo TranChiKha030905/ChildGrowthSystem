@@ -16,4 +16,7 @@ public interface AdviceRequestRepository extends JpaRepository<AdviceRequest, Lo
     List<AdviceRequest> findByChildId(Long childId);
 
     List<AdviceRequest> findByChild(ChildProfile profile);
+
+    //tìm yêu cầu chưa được phản hồi
+    List<AdviceRequest> findByResolvedFalse();
 }

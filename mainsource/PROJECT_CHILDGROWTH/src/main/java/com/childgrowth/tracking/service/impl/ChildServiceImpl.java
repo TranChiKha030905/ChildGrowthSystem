@@ -3,8 +3,11 @@ package com.childgrowth.tracking.service.impl;
 import com.childgrowth.tracking.model.Child;
 import com.childgrowth.tracking.model.User;
 import com.childgrowth.tracking.repository.ChildRepository;
+import com.childgrowth.tracking.repository.GrowthRecordRepository;
 import com.childgrowth.tracking.service.ChildService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -102,4 +105,5 @@ public class ChildServiceImpl implements ChildService {
     public List<Child> getChildrenByDoctor(User doctor) {
         return childRepository.findByDoctor(doctor);
     }
+
 } 

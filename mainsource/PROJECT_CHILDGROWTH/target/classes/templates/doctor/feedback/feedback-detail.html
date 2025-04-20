@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="doctor/fragment/head :: head">
+    <title>Chi tiết Phản hồi</title>
+    <style>
+        .feedback-header {
+            border-left: 4px solid #4b7bec;
+            padding-left: 15px;
+        }
+        .response-card {
+            border-left: 4px solid #28a745;
+            background-color: #f8f9fa;
+        }
+        .rating-stars {
+            color: #ffc107;
+            font-size: 1.2rem;
+        }
+        .badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+}
+
+.badge-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-resolved {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-in-progress {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-secondary {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="doctor/fragment/header :: header"></div>
+    <div th:replace="doctor/fragment/sidebar :: sidebar"></div>
+
+    <div class="main-panel">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="card-title">Chi tiết Phản hồi</h4>
+                            <a th:href="@{/doctor/feedbacks}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay lại
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Thông báo thành công -->
+                        <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <span th:if="${param.success[0] == 'responded'}">Đã gửi phản hồi thành công!</span>
+                            <span th:if="${param.success[0] == 'status_updated'}">Đã cập nhật trạng thái thành công!</span>
+                        </div>
+
+                        <!-- Thông tin cơ bản -->
+                        <div class="mb-4" style="background-color: #e9e9e9;padding: 10px;border-radius: 20px">
+                            <h5 class="feedback-header" th:text="${feedback.title}"></h5>
+                            <div class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <span class="text-muted">Gửi bởi: </span>
+                                    <strong th:text="${feedback.user.fullName}"></strong>
+                                    <span class="text-muted ml-3">Ngày gửi: </span>
+                                    <strong th:text="${#temporals.format(feedback.createdAt, 'dd/MM/yyyy HH:mm')}"></strong>
+                                </div>
+                                <div>
+                                    <span class="badge"
+                                          th:class="${{
+                                                'PENDING': 'badge-pending',
+                                                'RESOLVED': 'badge-resolved',
+                                                'IN_PROGRESS': 'badge-in-progress'
+                                              }[feedback.status] ?: 'badge-secondary'}"
+                                                th:text="${feedback.status}">
+                                        </span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <span class="text-muted">Loại: </span>
+                                <strong th:text="${feedback.type}"></strong>
+                                <span th:if="${feedback.priority}" class="ml-3">
+                                    <span class="text-muted">Ưu tiên: </span>
+                                    <strong th:text="${feedback.priority}"></strong>
+                                </span>
+                            </div>
+
+                            <div th:if="${feedback.overallRating}" class="mb-3">
+                                <span class="text-muted">Đánh giá: </span>
+                                <span class="rating-stars">
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                        <i th:class="${i <= feedback.overallRating} ? 'fas fa-star' : 'far fa-star'"></i>
+                                    </span>
+                                </span>
+                            </div>
+
+                            <div class="card card-body bg-light">
+                                <p th:text="${feedback.content}"></p>
+                            </div>
+                        </div>
+
+                        <!-- Phản hồi từ bác sĩ -->
+                        <div th:if="${feedback.response}" class="mb-4">
+                            <h6 class="text-success">Phản hồi từ bác sĩ</h6>
+                            <div class="card response-card">
+                                <div class="card-body">
+                                    <p th:text="${feedback.response}"></p>
+                                    <div class="text-right text-muted small">
+                                        <span th:text="${feedback.respondedBy.fullName}"></span> -
+                                        <span th:text="${#temporals.format(feedback.respondedAt, 'dd/MM/yyyy HH:mm')}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form phản hồi -->
+                        <div class="mb-4">
+                            <h6>Phản hồi</h6>
+                            <form th:action="@{'/doctor/feedbacks/' + ${feedback.id} + '/respond'}" method="post">
+                                <div class="form-group">
+                                    <textarea class="form-control" name="response" rows="4"
+                                              placeholder="Nhập phản hồi của bạn..." required
+                                              th:value="${feedback.response}"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Cập nhật trạng thái</label>
+                                    <select name="newStatus" class="form-control">
+                                        <option th:value="PENDING" th:selected="${feedback.status == 'PENDING'}">Chờ xử lý</option>
+                                        <option th:value="IN_PROGRESS" th:selected="${feedback.status == 'IN_PROGRESS'}">Đang xử lý</option>
+                                        <option th:value="RESOLVED" th:selected="${feedback.status == 'RESOLVED'}">Đã giải quyết</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Gửi phản hồi
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Cập nhật trạng thái nhanh -->
+                        <div class="mb-4">
+                            <h6>Cập nhật trạng thái nhanh</h6>
+                            <div class="btn-group">
+                                <form th:action="@{'/doctor/feedbacks/' + ${feedback.id} + '/status'}" method="post" class="mr-2">
+                                    <input type="hidden" name="status" value="PENDING">
+                                    <button type="submit" class="btn btn-warning"
+                                            th:disabled="${feedback.status == 'PENDING'}">
+                                        Chờ xử lý
+                                    </button>
+                                </form>
+                                <form th:action="@{'/doctor/feedbacks/' + ${feedback.id} + '/status'}" method="post" class="mr-2">
+                                    <input type="hidden" name="status" value="IN_PROGRESS">
+                                    <button type="submit" class="btn btn-info"
+                                            th:disabled="${feedback.status == 'IN_PROGRESS'}">
+                                        Đang xử lý
+                                    </button>
+                                </form>
+                                <form th:action="@{'/doctor/feedbacks/' + ${feedback.id} + '/status'}" method="post">
+                                    <input type="hidden" name="status" value="RESOLVED">
+                                    <button type="submit" class="btn btn-success"
+                                            th:disabled="${feedback.status == 'RESOLVED'}">
+                                        Đã giải quyết
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="doctor/fragment/script :: script"></div>
+</body>
+</html>

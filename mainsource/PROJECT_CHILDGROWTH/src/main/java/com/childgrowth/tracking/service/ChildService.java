@@ -18,4 +18,5 @@ public interface ChildService {
     boolean isChildLimitReached(User parent);
     void validateChildData(Child child);
     List<Child> getChildrenByDoctor(User doctor);
+
 } 

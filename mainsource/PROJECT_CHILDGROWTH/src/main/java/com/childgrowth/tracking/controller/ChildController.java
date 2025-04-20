@@ -147,7 +147,7 @@ public class ChildController {
     }
 
     // Xử lý xoá trẻ
-    @PostMapping("/child/{id}/delete")
+    @PostMapping("/member/child/{id}/delete")
     public String deleteChild(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         childService.deleteChild(id);
         redirectAttributes.addFlashAttribute("message", "Xoá trẻ thành công!");

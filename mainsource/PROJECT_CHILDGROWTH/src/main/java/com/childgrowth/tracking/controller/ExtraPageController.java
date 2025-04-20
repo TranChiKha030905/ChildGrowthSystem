@@ -56,7 +56,7 @@ public class ExtraPageController {
         User currentUser = userService.getUserByUsername(authentication.getName());
         feedback.setUser(currentUser);
         feedback.setCreatedAt(LocalDateTime.now());
-        feedback.setType("USER_FEEDBACK");
+        feedback.setType("FEEDBACK");
         feedback.setStatus("PENDING");
 
         feedbackService.saveFeedback(feedback);
