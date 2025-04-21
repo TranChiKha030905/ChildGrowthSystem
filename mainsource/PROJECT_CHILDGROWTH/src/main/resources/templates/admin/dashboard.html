@@ -14,7 +14,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Pending Doctor Approvals</div>
+                        <div class="card-title">Danh sách ACCOUNT </div>
                     </div>
                     <div class="card-body">
                         <div class="card-sub">
@@ -23,26 +23,25 @@
                         <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
                             <thead>
                             <tr>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Specialization</th>
-                                <th scope="col">Actions</th>
+                                <th>Họ tên</th>
+                                <th>Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Quyền</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="doctor : ${pendingDoctors}">
-                                <td th:text="${doctor.fullName}"></td>
-                                <td th:text="${doctor.email}"></td>
-                                <td th:text="${doctor.specialization}"></td>
+                            <tr th:each="user : ${newUsers}">
+                                <td th:text="${user.fullName}"></td>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.phoneNumber}"></td>
                                 <td>
-                                    <form th:action="@{/admin/doctor/{id}/approve(id=${doctor.id})}" method="post" style="display: inline;" >
-                                        <button type="submit" class="btn btn-success">Approve</button>
-                                    </form>
-                                    <form th:action="@{/admin/doctor/{id}/reject(id=${doctor.id})}" method="post" style="display: inline;" >
-                                        <button type="submit" class="btn btn-danger">Reject</button>
-                                    </form>
+                                    <span th:text="${user.role}"
+                                          th:classappend="
+                                              ${user.role} == 'ADMIN' ? 'badge bg-danger' :
+                                              (${user.role} == 'MEMBER' ? 'badge bg-success' :
+                                              (${user.role} == 'DOCTOR' ? 'badge bg-info' : 'badge bg-secondary'))">
+                                    </span>
                                 </td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>

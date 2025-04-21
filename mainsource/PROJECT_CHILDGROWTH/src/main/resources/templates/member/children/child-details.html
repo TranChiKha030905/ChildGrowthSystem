@@ -60,7 +60,26 @@
                             <td th:text="${#numbers.formatDecimal(record.height, 1, 2)}"></td>
                             <td th:text="${#numbers.formatDecimal(record.headCircumference, 1, 2)}"></td>
                             <td th:text="${#numbers.formatDecimal(record.bmi, 1, 2)}"></td>
-                            <td th:text="${record.notes}"></td>
+                            <td>
+                                <span th:if="${record.bmi != null and record.bmi < 14.0}"
+                                      class="text-danger">Trẻ gầy (thiếu cân)
+                                </span>
+
+                                <span th:if="${record.bmi != null and record.bmi >= 14.0 and record.bmi < 18.5}"
+                                      class="text-success">Trẻ bình thường
+                                </span>
+
+                                <span th:if="${record.bmi != null and record.bmi >= 18.5 and record.bmi < 25}"
+                                      class="text-warning">Trẻ thừa cân nhẹ
+                                </span>
+
+                                <span th:if="${record.bmi != null and record.bmi >= 25}"
+                                      class="text-danger">Trẻ béo phì
+                                </span>
+
+                                <span th:if="${record.bmi == null}" class="text-muted">Không đủ dữ liệu</span>
+                            </td>
+
                         </tr>
                         </tbody>
                     </table>

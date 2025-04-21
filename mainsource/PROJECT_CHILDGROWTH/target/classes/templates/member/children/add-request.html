@@ -18,8 +18,16 @@
 
         <h3 th:text="'Gửi yêu cầu cho ' + ${child.name}"></h3>
 
-        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${message}" class="alert alert-success" >
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <span th:text="${message}"></span>
+        </div>
         <div th:if="${error}" class="alert alert-danger" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
           <span th:text="${error}"></span><br>
           <a th:href="@{/member/upgrade}" class="btn btn-sm btn-warning mt-2">Nâng cấp gói</a>
         </div>

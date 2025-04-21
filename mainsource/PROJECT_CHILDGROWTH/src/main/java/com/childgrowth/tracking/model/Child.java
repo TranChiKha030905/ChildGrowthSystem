@@ -55,4 +55,11 @@ public class Child {
 
     @OneToOne(mappedBy = "child", cascade = CascadeType.ALL)
     private ChildProfile childProfile; // Quan hệ One-to-One với ChildProfile
-} 
+
+    @Column(length = 1000)
+    private String diagnosis;
+
+    @Column(length = 1000)
+    private String treatment;
+
+}

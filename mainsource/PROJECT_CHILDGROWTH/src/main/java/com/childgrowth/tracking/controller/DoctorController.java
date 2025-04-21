@@ -364,5 +364,40 @@ public String getAllFeedbacks(
         feedbackService.updateFeedbackStatus(id, status, currentDoctor);
         return "redirect:/doctor/feedbacks/" + id + "?success=status_updated";
     }
+
+//    ----------------- Khámm bệnh cho trẻ------------
+// Hiển thị form khám bệnh
+@GetMapping("/patients/examine/{id}")
+public String showExaminationForm(@PathVariable Long id, Model model) {
+    ChildProfile profile = childProfileRepository.findById(id).orElse(null);
+    if (profile == null || profile.getChild() == null) {
+        model.addAttribute("error", "Không tìm thấy bệnh nhân");
+        return "redirect:/doctor/patients";
+    }
+    model.addAttribute("profile", profile); // truyền cả childProfile
+    model.addAttribute("child", profile.getChild()); // truyền riêng child
+    return "doctor/patient-manage/examination-form";
+}
+
+
+    // Xử lý lưu khám bệnh
+    @PostMapping("/patients/examine/{id}")
+    public String saveExamination(@PathVariable Long id,
+                                  @RequestParam String diagnosis,
+                                  @RequestParam String treatment,
+                                  RedirectAttributes redirectAttributes) {
+        ChildProfile profile = childProfileRepository.findById(id).orElse(null);
+        if (profile != null && profile.getChild() != null) {
+            Child child = profile.getChild();
+            child.setDiagnosis(diagnosis);
+            child.setTreatment(treatment);
+            child.setLastCheckup(LocalDate.now());
+            childRepository.save(child);
+            redirectAttributes.addFlashAttribute("success", "Khám bệnh thành công!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Không tìm thấy hồ sơ bệnh nhi");
+        }
+        return "redirect:/doctor/patients";
+    }
 }
 

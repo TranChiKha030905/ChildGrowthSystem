@@ -37,7 +37,9 @@ public class AdminController {
         return "admin/index";
     }
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model ) {
+        List<User> newUsers = userService.getAllUsers();
+        model.addAttribute("newUsers", newUsers);
         return "/admin/dashboard";
     }
 

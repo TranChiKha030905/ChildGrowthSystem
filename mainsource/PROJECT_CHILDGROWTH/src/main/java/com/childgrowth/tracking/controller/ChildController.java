@@ -178,15 +178,15 @@ public class ChildController {
                                       @RequestParam("question") String question,
                                       Authentication authentication,
                                       RedirectAttributes redirectAttributes) {
-
-
         // 1. Xác thực người dùng
         User currentUser = userService.getUserByUsername(authentication.getName());
+
         // 3. Kiểm tra gói membership
         if (!currentUser.getIdMembership().getName().equalsIgnoreCase("VIP")) {
             redirectAttributes.addFlashAttribute("error", "Chỉ thành viên gói VIP mới có thể yêu cầu tư vấn bác sĩ");
             return "redirect:/member/child/" + id;
         }
+
         // 2. Kiểm tra tồn tại trẻ
         Optional<Child> childOptional = childRepository.findById(id);
         if (childOptional.isEmpty()) {
@@ -194,24 +194,27 @@ public class ChildController {
             return "redirect:/member/manage";
         }
         Child child = childOptional.get();
+
         // 2. Kiểm tra đã có hồ sơ chưa
         if (child.getChildProfile() == null) {
             redirectAttributes.addFlashAttribute("error", "Trẻ chưa có hồ sơ");
-            return "redirect:/member/child/" + id ;
+            return "redirect:/member/child/" + id;
         }
 
-
+        // Tạo yêu cầu tư vấn
         AdviceRequest advice = AdviceRequest.builder()
                 .message(question)
-                .child(child.getChildProfile())
+                .child(child.getChildProfile()) // Gắn hồ sơ của trẻ
                 .createdAt(LocalDate.now())
                 .resolved(false)
                 .build();
 
+        // Lưu yêu cầu tư vấn vào database
         adviceRequestRepository.save(advice);
 
+        // Thông báo thành công
         redirectAttributes.addFlashAttribute("message", "Yêu cầu tư vấn đã được gửi đến bác sĩ!");
-        return "redirect:/member/child/" + id ;
+        return "redirect:/member/child/" + id;
     }
 
 

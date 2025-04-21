@@ -45,6 +45,7 @@
                 <th>Giới tính</th>
                 <th>Tuổi</th>
                 <th>Người nhà</th>
+                <th>Lần khám</th>
                 <th>Thao tác</th>
               </tr>
               </thead>
@@ -64,7 +65,10 @@
                 <td th:text="${patient.gender}"></td>
                 <td th:text="${patient.age} ?: 'N/A'"></td>
                 <td th:text="${patient.user != null} ? ${patient.user.fullName} : 'Chưa có'"></td>
+                <td th:text="${patient.child != null and patient.child.lastCheckup != null} ? ${#temporals.format(patient.child.lastCheckup, 'dd/MM/yyyy')} : 'Chưa khám'"></td></td>
                 <td>
+                  <a th:href="@{/doctor/patients/examine/{id}(id=${patient.id})}"
+                     class="btn btn-sm btn-success">Khám</a>
                   <a th:href="@{/doctor/patients/edit/{id}(id=${patient.id})}"
                      class="btn btn-sm btn-default">Sửa</a>
                   <a th:href="@{/doctor/patients/delete/{id}(id=${patient.id})}"

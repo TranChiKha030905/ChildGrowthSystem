@@ -21,6 +21,6 @@ public class AdviceRequest {
     private boolean resolved;       //nếu bác sĩ phản hồi thì sẽ hiện true
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "child_profile_id")
     private ChildProfile child;
 }
