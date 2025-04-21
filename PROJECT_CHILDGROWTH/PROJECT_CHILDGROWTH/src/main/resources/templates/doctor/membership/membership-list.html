@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="doctor/fragment/head :: head">
+  <title>Quản lý Gói Thành viên</title>
+</head>
+<body>
+<div class="wrapper">
+  <div th:replace="doctor/fragment/header :: header"></div>
+  <div th:replace="doctor/fragment/sidebar :: sidebar"></div>
+
+  <div class="main-panel">
+    <div class="content">
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title">Danh sách Gói Thành viên</h4>
+            <p class="card-category">Quản lý các gói thành viên của hệ thống</p>
+          </div>
+          <div class="card-body">
+            <!-- Thông báo -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+              <span th:text="${success}"></span>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+              <span th:text="${error}"></span>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <!-- Nút thêm mới -->
+            <div class="mb-3">
+              <a th:href="@{/doctor/membership-plans/add}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Thêm Gói Mới
+              </a>
+            </div>
+
+            <!-- Bảng danh sách -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="text-primary">
+                <tr>
+                  <th>ID</th>
+                  <th>Tên Gói</th>
+                  <th>Giá ($)</th>
+                  <th>Số Trẻ Tối đa</th>
+                  <th>Tư vấn Bác sĩ</th>
+                  <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="plan : ${plans}">
+                  <td th:text="${plan.id}"></td>
+                  <td th:text="${plan.name}"></td>
+                  <td th:text="${#numbers.formatInteger(plan.price, 0, 'COMMA')}"></td>
+                  <td th:text="${plan.maxChildren}"></td>
+                  <td>
+                    <span th:if="${plan.allowDoctorConsult}" class="badge badge-success">Có</span>
+                    <span th:if="${!plan.allowDoctorConsult}" class="badge badge-secondary">Không</span>
+                  </td>
+                  <td>
+                    <a th:href="@{'/doctor/membership-plans/edit/' + ${plan.id}}"
+                       class="btn btn-sm btn-info" title="Chỉnh sửa">
+                      <i class="fas fa-edit">Chỉnh sửa</i>
+                    </a>
+                    <a th:href="@{'/doctor/membership-plans/delete/' + ${plan.id}}"
+                       class="btn btn-sm btn-danger" title="Xóa"
+                       onclick="return confirm('Bạn chắc chắn muốn xóa gói này?')">
+                      <i class="fas fa-trash">Xóa</i>
+                    </a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="doctor/fragment/script :: script"></div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<head th:fragment="head" xmlns:th="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Admin page</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <link rel="stylesheet" th:href="@{/Admin/assets/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" th:href="@{/Admin/assets/css/ready.css}">
+    <link rel="stylesheet" th:href="@{/Admin/assets/css/demo.css}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const currentUrl = window.location.pathname;
+          const navItems = document.querySelectorAll(".sidebar .nav-item");
+
+          navItems.forEach(function (item) {
+            const link = item.querySelector("a");
+            if (link && link.getAttribute("href") && currentUrl.includes(link.getAttribute("href"))) {
+              navItems.forEach(i => i.classList.remove("active")); // clear all
+              item.classList.add("active"); // set active to matched
+            }
+          });
+        });
+    </script>
+    <style>
+        .card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card h2 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+    </style>
+</head>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="doctor/fragment/head :: head"></head>
+<body>
+<div class="wrapper">
+    <div th:replace="doctor/fragment/header :: header"></div>
+    <div th:replace="doctor/fragment/sidebar :: sidebar"></div>
+    <div class="main-panel">
+        <div class="content">
+            <h2>Chào bác sĩ <span th:text="${#authentication.name}"></span>!</h2>
+            <h1>Doctor Dashboard</h1>
+            <a class="btn btn-outline-secondary" href="/">🏠 Trang chủ</a>
+            <div class="card">
+                <div class="card-title">
+                    <h2>Patient</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Bảng dữ liệu -->
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Giới tính</th>
+                            <th>Tuổi</th>
+                            <th>Người nhà</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Hiển thị khi không có dữ liệu -->
+                        <tr th:if="${patients == null or patients.empty}">
+                            <td colspan="7" class="text-center text-muted">
+                                Không có dữ liệu bệnh nhân
+                            </td>
+                        </tr>
+
+                        <!-- Hiển thị dữ liệu -->
+                        <tr th:each="patient : ${patients}" th:unless="${patients == null or patients.empty}">
+                            <td th:text="${patient.id}"></td>
+                            <td th:text="${patient.name}"></td>
+                            <td th:text="${patient.birthDate != null} ? ${#temporals.format(patient.birthDate, 'dd/MM/yyyy')} : 'N/A'"></td>
+                            <td th:text="${patient.gender}"></td>
+                            <td th:text="${patient.age} ?: 'N/A'"></td>
+                            <td th:text="${patient.user != null} ? ${patient.user.fullName} : 'Chưa có'"></td>
+                            <td>
+                                <a th:href="@{/doctor/patients/edit/{id}(id=${patient.id})}"
+                                   class="btn btn-sm btn-default">Sửa</a>
+                                <a th:href="@{/doctor/patients/delete/{id}(id=${patient.id})}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Bạn có chắc muốn xóa bệnh nhân này?')">Xóa</a>
+                                <a th:href="@{/doctor/patients/details/{id}(id=${patient.id})}"
+                                   class="btn btn-sm btn-info">Chi tiết</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-title">
+                    <h2>Request</h2>
+                    <div th:if="${requests.isEmpty()}">
+                        <p>Không có yêu cầu nào.</p>
+                    </div>
+                </div>
+                <table class="table table-bordered table-bordered-bd-warning mt-4">
+                    <tr>
+                        <th>ID</th>
+                        <th>Lời nhắn</th>
+                        <th>Ngày tạo</th>
+                        <th>Hành động</th>
+                    </tr>
+                    <tr th:each="req : ${requests}">
+                        <td th:text="${req.id}">1</td>
+                        <td th:text="${req.message}">...</td>
+                        <td th:text="${#temporals.format(req.createdAt, 'dd/MM/yyyy')}"></td>
+                        <td>
+                            <a class="btn btn-warning" th:href="@{'/doctor/advice-requests/' + ${req.id} + '/response-form'}">Phản hồi</a>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+
+            <div class="section">
+                <h2>Quick Actions</h2>
+                <div class="grid">
+                    <a th:href="@{/doctor/advice-requests}" class="card">
+                        <h3>Advice Requests</h3>
+                    </a>
+                    <a th:href="@{/doctor/feedbacks}" class="card">
+                        <h3>Feeback</h3>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+            <div>
+                <a href="/doctor/advice-requests">Tư vấn chờ phản hồi</a> |
+                <a href="/doctor/patient-details">Chi tiết bệnh nhi</a> |
+                <a href="/doctor/reports">Xem báo cáo</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" role="dialog" aria-labelledby="modalUpdatePro" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title"><i class="la la-frown-o"></i> Under Development</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Currently, the pro version of the <b>Ready Dashboard</b> Bootstrap is in progress development</p>
+                <p><b>We'll let you know when it's done</b></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="doctor/fragment/script :: script"></div>
+</body>
+</html>
