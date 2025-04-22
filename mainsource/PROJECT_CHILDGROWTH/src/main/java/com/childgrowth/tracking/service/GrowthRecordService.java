@@ -17,4 +17,6 @@ public interface GrowthRecordService {
     void verifyGrowthRecord(Long id, String verificationNotes);
     void calculateGrowthMetrics(GrowthRecord record);
     void checkGrowthAlerts(GrowthRecord record);
+
+    List<GrowthRecord> findByChildIdOrderByMeasurementDateAsc(Long childId);
 } 

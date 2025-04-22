@@ -85,4 +85,9 @@ public class GrowthRecordServiceImpl implements GrowthRecordService {
     public void checkGrowthAlerts(GrowthRecord record) {
         // Implement growth alerts checking logic
     }
+
+    @Override
+    public List<GrowthRecord> findByChildIdOrderByMeasurementDateAsc(Long childId) {
+        return growthRecordRepository.findByChildIdOrderByMeasurementDateAsc(childId);
+    }
 } 

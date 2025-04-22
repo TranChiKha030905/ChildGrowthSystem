@@ -2,17 +2,15 @@
 package com.childgrowth.tracking.controller;
 
 
+import com.childgrowth.tracking.service.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import com.childgrowth.tracking.exception.ResourceNotFoundException;
 import com.childgrowth.tracking.model.*;
 import com.childgrowth.tracking.repository.*;
-import com.childgrowth.tracking.service.FeedbackService;
-import com.childgrowth.tracking.service.MembershipPlanService;
-import com.childgrowth.tracking.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
@@ -24,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +36,10 @@ public class DoctorController {
     private final ChildProfileRepository childProfileRepository;
     private final UserRepository userRepository;
     private final AdviceRequestRepository adviceRequestRepository;
+
+    private final ChildService childService;
+    private final ChildRepository childRepository;
+    private final GrowthRecordService growthRecordService;
 
 
     @GetMapping("/dashboard")
@@ -86,7 +89,7 @@ public class DoctorController {
     //--------------------------quản lí bệnh nhân
 
     @GetMapping("/patients/details/{id}")
-    public String showPatientDetails(@PathVariable Long id, Model model,Authentication authentication) {
+    public String showPatientDetails(@PathVariable Long id, Model model, Authentication authentication) {
         String currentUsername = authentication.getName();
         User currentDoctor = userService.getUserByUsername(currentUsername);
 
@@ -126,7 +129,6 @@ public class DoctorController {
         return "doctor/patient-manage/patient-list";
     }
 
-    private final ChildRepository childRepository;
 
     // Form thêm bệnh nhân và xử lý các thay đổi
     @GetMapping("/patients/add")
@@ -190,6 +192,7 @@ public class DoctorController {
 
         return "redirect:/doctor/patients";
     }
+
     // Form chỉnh sửa bệnh nhân
     @GetMapping("/patients/edit/{id}")
     public String showEditFormMem(@PathVariable Long id, Model model) {
@@ -226,8 +229,9 @@ public class DoctorController {
         }
         return "redirect:/doctor/patients";
     }
-//    --------------------------------------Doctor quản lí gói thành viên
-private final MembershipPlanService membershipPlanService;
+
+    //    --------------------------------------Doctor quản lí gói thành viên
+    private final MembershipPlanService membershipPlanService;
 
 
     // Hiển thị danh sách gói thành viên
@@ -281,48 +285,48 @@ private final MembershipPlanService membershipPlanService;
     }
 
 
-
 //    --------------------------------FeedBack
 
     private final FeedbackService feedbackService;
-// Xem danh sách feedback
-@GetMapping("/feedbacks")
-public String getAllFeedbacks(
-        @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "createdAt,desc") String sort,
-        @RequestParam(required = false) String status,
-        @RequestParam(required = false) String type,
-        Model model,
-        Authentication authentication) {
 
-    // Phân trang và sắp xếp
-    String[] sortParams = sort.split(",");
-    Sort.Direction direction = sortParams[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-    Pageable pageable = PageRequest.of(page - 1, size, Sort.by(direction, sortParams[0]));
+    // Xem danh sách feedback
+    @GetMapping("/feedbacks")
+    public String getAllFeedbacks(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt,desc") String sort,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String type,
+            Model model,
+            Authentication authentication) {
 
-    // Lọc theo status và type nếu có
-    Page<Feedback> feedbackPage;
-    if (status != null && !status.isEmpty() && type != null && !type.isEmpty()) {
-        feedbackPage = feedbackService.findByStatusAndType(status, type, pageable);
-    } else if (status != null && !status.isEmpty()) {
-        feedbackPage = feedbackService.findByStatus(status, pageable);
-    } else if (type != null && !type.isEmpty()) {
-        feedbackPage = feedbackService.findByType(type, pageable);
-    } else {
-        feedbackPage = feedbackService.findAll(pageable);
+        // Phân trang và sắp xếp
+        String[] sortParams = sort.split(",");
+        Sort.Direction direction = sortParams[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(direction, sortParams[0]));
+
+        // Lọc theo status và type nếu có
+        Page<Feedback> feedbackPage;
+        if (status != null && !status.isEmpty() && type != null && !type.isEmpty()) {
+            feedbackPage = feedbackService.findByStatusAndType(status, type, pageable);
+        } else if (status != null && !status.isEmpty()) {
+            feedbackPage = feedbackService.findByStatus(status, pageable);
+        } else if (type != null && !type.isEmpty()) {
+            feedbackPage = feedbackService.findByType(type, pageable);
+        } else {
+            feedbackPage = feedbackService.findAll(pageable);
+        }
+
+        model.addAttribute("feedbacks", feedbackPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", feedbackPage.getTotalPages());
+        model.addAttribute("size", size); // Thêm size vào model
+        model.addAttribute("sort", sort);
+        model.addAttribute("status", status);
+        model.addAttribute("type", type);
+
+        return "doctor/feedback/feedback-list"; // Đảm bảo template này tồn tại
     }
-
-    model.addAttribute("feedbacks", feedbackPage.getContent());
-    model.addAttribute("currentPage", page);
-    model.addAttribute("totalPages", feedbackPage.getTotalPages());
-    model.addAttribute("size", size); // Thêm size vào model
-    model.addAttribute("sort", sort);
-    model.addAttribute("status", status);
-    model.addAttribute("type", type);
-
-    return "doctor/feedback/feedback-list"; // Đảm bảo template này tồn tại
-}
 
     // Xem chi tiết feedback
     @GetMapping("/feedbacks/{id}")
@@ -365,19 +369,19 @@ public String getAllFeedbacks(
         return "redirect:/doctor/feedbacks/" + id + "?success=status_updated";
     }
 
-//    ----------------- Khámm bệnh cho trẻ------------
+    //    ----------------- Khámm bệnh cho trẻ------------
 // Hiển thị form khám bệnh
-@GetMapping("/patients/examine/{id}")
-public String showExaminationForm(@PathVariable Long id, Model model) {
-    ChildProfile profile = childProfileRepository.findById(id).orElse(null);
-    if (profile == null || profile.getChild() == null) {
-        model.addAttribute("error", "Không tìm thấy bệnh nhân");
-        return "redirect:/doctor/patients";
+    @GetMapping("/patients/examine/{id}")
+    public String showExaminationForm(@PathVariable Long id, Model model) {
+        ChildProfile profile = childProfileRepository.findById(id).orElse(null);
+        if (profile == null || profile.getChild() == null) {
+            model.addAttribute("error", "Không tìm thấy bệnh nhân");
+            return "redirect:/doctor/patients";
+        }
+        model.addAttribute("profile", profile); // truyền cả childProfile
+        model.addAttribute("child", profile.getChild()); // truyền riêng child
+        return "doctor/patient-manage/examination-form";
     }
-    model.addAttribute("profile", profile); // truyền cả childProfile
-    model.addAttribute("child", profile.getChild()); // truyền riêng child
-    return "doctor/patient-manage/examination-form";
-}
 
 
     // Xử lý lưu khám bệnh
@@ -385,13 +389,16 @@ public String showExaminationForm(@PathVariable Long id, Model model) {
     public String saveExamination(@PathVariable Long id,
                                   @RequestParam String diagnosis,
                                   @RequestParam String treatment,
+                                  Authentication authentication,
                                   RedirectAttributes redirectAttributes) {
+        User doctor = userService.getUserByUsername(authentication.getName());
         ChildProfile profile = childProfileRepository.findById(id).orElse(null);
         if (profile != null && profile.getChild() != null) {
             Child child = profile.getChild();
             child.setDiagnosis(diagnosis);
             child.setTreatment(treatment);
             child.setLastCheckup(LocalDate.now());
+            child.setDoctor(doctor);
             childRepository.save(child);
             redirectAttributes.addFlashAttribute("success", "Khám bệnh thành công!");
         } else {
@@ -399,5 +406,22 @@ public String showExaminationForm(@PathVariable Long id, Model model) {
         }
         return "redirect:/doctor/patients";
     }
+
+
+//---------------------------xem biểu đồ tăng trưởng của trẻ
+// GET: Xem biểu đồ tăng trưởng
+@GetMapping("/child/{profileId}/growth")
+public String viewGrowthChart(@PathVariable Long profileId, Model model) {
+    ChildProfile profile = childProfileRepository.findById(profileId)
+            .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy hồ sơ trẻ với ID: " + profileId));
+
+    Child child = profile.getChild();
+    List<GrowthRecord> records = growthRecordService.findByChildIdOrderByMeasurementDateAsc(child.getId());
+
+    model.addAttribute("child", child);
+    model.addAttribute("records", records);
+
+    return "doctor/patient-manage/growth_records"; // Đảm bảo file HTML tên như này
 }
 
+}

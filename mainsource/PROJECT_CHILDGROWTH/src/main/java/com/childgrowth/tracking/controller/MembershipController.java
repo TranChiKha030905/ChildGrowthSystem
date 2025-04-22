@@ -23,8 +23,6 @@ import java.util.Optional;
 @Controller
 public class MembershipController {
 
-    private static final Logger logger = LoggerFactory.getLogger(MembershipController.class);
-
     @Autowired
     private MembershipPlanRepository membershipPlanRepository;
 
@@ -91,13 +89,9 @@ public class MembershipController {
                 User user = optionalUser.get();
                 Long currentMembershipId = (user.getIdMembership() != null) ? user.getIdMembership().getId() : null;
                 model.addAttribute("currentMembershipId", currentMembershipId);
-                logger.info("Current membership ID: {}", currentMembershipId);
-            } else {
-                logger.warn("User not authenticated when accessing memberships page.");
             }
 
         } catch (Exception e) {
-            logger.error("Error rendering memberships page", e);
             model.addAttribute("error", "Đã xảy ra lỗi khi tải trang gói thành viên.");
         }
 
