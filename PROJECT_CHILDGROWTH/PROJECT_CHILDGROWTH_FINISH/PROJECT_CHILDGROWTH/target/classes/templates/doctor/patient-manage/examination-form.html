@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="doctor/fragment/head :: head">
+  <title>Khám bệnh</title>
+</head>
+<body>
+<div class="wrapper">
+  <div th:replace="doctor/fragment/header :: header"></div>
+  <div th:replace="doctor/fragment/sidebar :: sidebar"></div>
+
+  <div class="main-panel">
+    <div class="content">
+      <div class="container-fluid">
+
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">Khám bệnh - <span th:text="${child.name}"></span></h4>
+          </div>
+          <div class="card-body">
+            <form th:action="@{/doctor/patients/examine/{id}(id=${profile.id})}" method="post">
+              <div class="form-group">
+                <label>Chẩn đoán</label>
+                <textarea name="diagnosis" class="form-control"
+                          th:text="${child.diagnosis} ?: ''"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Phác đồ điều trị</label>
+                <textarea name="treatment" class="form-control"
+                          th:text="${child.treatment} ?: ''"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Lưu</button>
+              <a th:href="@{/doctor/patients}" class="btn btn-secondary">Hủy</a>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="doctor/fragment/script :: script"></div>
+</body>
+</html>

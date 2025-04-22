@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head"></head>
+
+<body class="page-index">
+<header th:replace="layout/header :: header"></header>
+
+<main class="pricing">
+    <!-- Page Title -->
+    <div class="page-title accent-background">
+        <div class="container">
+            <h1>Gói Thành Viên</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a th:href="@{/index}">Home</a></li>
+                    <li class="current">Gói Thành Viên</li>
+                </ol>
+            </nav>
+        </div>
+    </div><!-- End Page Title -->
+    <section id="pricing" class="pricing section">
+
+        <!-- Section Title -->
+
+        <h2>CÁC GÓI THÀNH VIÊN</h2>
+        <!-- Hiển thị thông báo lỗi hoặc thành công -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        </div><!-- End Section Title -->
+
+        <div class="container" style="margin-top: 50px;">
+
+            <div class="row g-4 g-lg-0" >
+
+                <div class="col-lg-4">
+                    <div class="pricing-item" >
+                        <h3>Free</h3>
+                        <h4><sup>$</sup>0<span> / month</span></h4>
+                        <ul>
+                            <li><i class="bi bi-check"></i> <span>Xem BMI của trẻ sơ sinh</span></li>
+                            <li><i class="bi bi-check"></i> <span>Dữ liệu sức khỏe</span></li>
+                            <li><i class="bi bi-check"></i> <span>Ưu đãi mỗi tài khoản kiểm tra được 2 trẻ</span></li>
+                            <li class="na"><i class="bi bi-x"></i> <span>Xem biểu đồ tăng trưởng của trẻ</span></li>
+                            <li class="na"><i class="bi bi-x"></i> <span>Cảnh báo về sức khỏe trẻ em</span></li>
+                        </ul>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="1"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 1} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 1} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 1} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- End Pricing Item -->
+
+                <div class="col-lg-4 featured" >
+                    <div class="pricing-item">
+                        <h2 style="color: silver;">Saving</h2>
+                        <h4><sup>$</sup>29<span> / month</span></h4>
+                        <ul>
+                            <li><i class="bi bi-check"></i> <span>Xem BMI của trẻ sơ sinh</span></li>
+                            <li><i class="bi bi-check"></i> <span>Dữ liệu sức khỏe</span></li>
+                            <li><i class="bi bi-check"></i> <span>Ưu đãi mỗi tài khoản kiểm tra được 7 trẻ</span></li>
+                            <li><i class="bi bi-check"></i> <span>Xem biểu đồ tăng trưởng của trẻ</span></li>
+                            <li><i class="bi bi-check"></i> <span>Cảnh báo về sức khỏe trẻ em</span></li>
+                        </ul>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="2"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 2} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 2} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 2} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div><!-- End Pricing Item -->
+
+                <div class="col-lg-4" >
+                    <div class="pricing-item">
+                        <h2 style="color: gold;">VIP</h2>
+                        <h4><sup>$</sup>59<span> / month</span></h4>
+                        <ul>
+                            <li><i class="bi bi-check"></i> <span>Giảm tiền khám sức khỏe</span></li>
+                            <li><i class="bi bi-check"></i> <span>Trẻ được khám phòng đặt biệt</span></li>
+                            <li><i class="bi bi-check"></i> <span>Theo dõi nhiều trẻ cùng 1 lúc</span></li>
+                            <li><i class="bi bi-check"></i> <span>Thêm nhiều chức năng mới</span></li>
+                            <li><i class="bi bi-check"></i> <span>Kèm thêm ưu đãi</span></li>
+                        </ul>
+                        <form th:action="@{/purchase-membership}" method="post" style="text-align: center !important;">
+                            <input type="hidden" name="planId" value="3"/>
+                            <div class="text-center">
+                                <button style="width:139.3px; height:44px" type="submit"
+                                        th:class="${currentMembershipId == 3} ? 'buy-btn bought' : 'buy-btn'"
+                                        th:text="${currentMembershipId == 3} ? 'Đã mua' : 'Buy Now'"
+                                        th:onclick="${currentMembershipId == 3} ? 'showAlert()' : 'this.closest(\'form\').submit()'"></button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!-- End Pricing Item -->
+
+            </div>
+
+        </div>
+
+    </section><!-- /Pricing Section -->
+    <!-- Page Title -->
+
+</main>
+
+<footer th:replace="layout/footer :: footer"></footer>
+
+<!-- Scroll Top -->
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Preloader -->
+<!-- Vendor JS Files -->
+<div th:replace="layout/script :: script"></div>
+
+
+
+<!-- Main JS File -->
+<script>
+    function showAlert() {
+        alert("Bạn đã mua rồi");
+    }
+</script>
+<script th:src="@{assets/js/main.js}"></script>
+</body>
+</html>

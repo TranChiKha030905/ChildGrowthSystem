@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Chỉ số tăng trưởng</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <a th:href="@{/doctor/patient}" class="btn btn-secondary">← Quay lại danh sách</a>
+  <br>
+  <h2 th:text="'Biểu đồ tăng trưởng của ' + ${child.name}"></h2>
+
+  <hr class="my-4">
+
+  <!-- Biểu đồ (sửa lại cách lấy dữ liệu từ Entity) -->
+  <canvas id="growthChart" height="120"></canvas>
+
+  <script th:inline="javascript">
+    const labels = [];
+    const heights = [];
+    const weights = [];
+
+    /*[# th:each="record : ${records}"]*/
+        labels.push([[${#temporals.format(record.measurementDate, 'dd/MM/yyyy')}]]);
+        heights.push([[${record.height}]]);
+        weights.push([[${record.weight}]]);
+    /*[/]*/
+
+    const ctx = document.getElementById('growthChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chiều cao (cm)',
+                data: heights,
+                borderWidth: 2,
+                borderColor: 'blue',
+                fill: false
+            }, {
+                label: 'Cân nặng (kg)',
+                data: weights,
+                borderWidth: 2,
+                borderColor: 'green',
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+  </script>
+
+
+  <hr>
+  <h5>Lịch sử chỉ số</h5>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Ngày</th>
+      <th>Chiều cao (cm)</th>
+      <th>Cân nặng (kg)</th>
+      <th>BMI</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${records}">
+      <td th:text="${#temporals.format(r.measurementDate, 'dd/MM/yyyy')}"></td>
+      <td th:text="${r.height}"></td>
+      <td th:text="${r.weight}"></td>
+      <td th:text="${r.bmi}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>
